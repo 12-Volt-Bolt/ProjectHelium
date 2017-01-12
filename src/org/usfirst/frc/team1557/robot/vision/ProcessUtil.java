@@ -4,14 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -81,30 +77,9 @@ public class ProcessUtil {
 
 	}
 
-	/**
-	 * Inverts the image after colors have been filtered.
-	 * 
-	 * @param start
-	 * @return
-	 */
 	public static Mat invertBinaryImage(Mat start) {
 		Mat m = new Mat();
 		Core.bitwise_not(start, m);
 		return m;
-	}
-
-	public static List<MatOfPoint> createContours(Mat start) {
-		List<MatOfPoint> contours = new ArrayList<>();
-		// These are the settings we used last year.
-		Imgproc.findContours(start, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-		return contours;
-	}
-
-	public static List<Rect> createRectangles(List<MatOfPoint> contours) {
-		List<Rect> r = new ArrayList<>();
-		for (MatOfPoint mop : contours) {
-			r.add(Imgproc.boundingRect(mop));
-		}
-		return r;
 	}
 }
