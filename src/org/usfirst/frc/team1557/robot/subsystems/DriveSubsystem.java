@@ -14,9 +14,9 @@ public class DriveSubsystem extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	public static CANTalon frontRight = new CANTalon(0);
-	public static CANTalon frontLeft = new CANTalon(0);
-	public static CANTalon rearRight = new CANTalon(0);
+	public static CANTalon frontRight = new CANTalon(2);
+	public static CANTalon frontLeft = new CANTalon(3);
+	public static CANTalon rearRight = new CANTalon(1);
 	public static CANTalon rearLeft = new CANTalon(0);
 
     public void initDefaultCommand() {
