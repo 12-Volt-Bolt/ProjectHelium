@@ -29,24 +29,34 @@ public class DriveSubsystem extends Subsystem {
     
     public void mecanumDrive(double x, double y, double r) {
     	
+    	if (Math.abs(x) < .09) {
+    		x = 0;
+    	}
+    	if (Math.abs(y) < .09) {
+    		y = 0;
+    	}
+    	if (Math.abs(r) < .09) {
+    		r = 0;
+    	}
+    	
     	double fr = y + r + x;
     	double fl = y - r - x;
-    	double rl = y + r + x;
-    	double rr = y - r - x;
+    	double rl = y - r + x;
+    	double rr = y + r - x;
     
     	double highestValue = 1;
     	
-    	if ( fr > highestValue ) {
-    		highestValue = fr;
+    	if ( Math.abs(fr) > highestValue ) {
+    		highestValue = Math.abs(fr);
     	} 
-    	if (fl > highestValue) {
-    		highestValue = fl;
+    	if (Math.abs(fl) > highestValue) {
+    		highestValue = Math.abs(fl);
     	}
-    	if (rl > highestValue) {
-    		highestValue = rl;
+    	if (Math.abs(rl) > highestValue) {
+    		highestValue = Math.abs(rl);
     	}
-    	if (rr > highestValue) {
-    		highestValue = rr;
+    	if (Math.abs(rr) > highestValue) {
+    		highestValue = Math.abs(rr);
     	}
     	
     	fr = fr / highestValue;
@@ -54,10 +64,12 @@ public class DriveSubsystem extends Subsystem {
     	rl = rl / highestValue;
     	rr = rr / highestValue;
     	
-    	frontRight.set(fr);
-    	rearRight.set(rr);
-    	rearLeft.set(rl);
-    	frontLeft.set(fl);
+    	fl = fl * (-1);
+    	
+    	frontRight.set(-fr);
+    	rearRight.set(-rr/2);
+    	rearLeft.set(-rl/2);
+    	frontLeft.set(-fl);
     	
     }
     

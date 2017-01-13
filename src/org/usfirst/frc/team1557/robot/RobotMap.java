@@ -19,9 +19,9 @@ public class RobotMap {
 	
 	public static int mainJoyID = 0;
 	
-	public static int mainJoyYAxisID = 0;
+	public static int mainJoyYAxisID = 1;
 	public static int mainJoyXAxisID = 0;
-	public static int mainJoyZAxisID = 0;
+	public static int mainJoyZAxisID = 3;
 	
 	public static int defenseJoyYAxisID = 0;
 }
