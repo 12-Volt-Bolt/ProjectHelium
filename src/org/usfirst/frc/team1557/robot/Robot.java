@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.text.DecimalFormat;
+
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
 
 /**
@@ -30,6 +32,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
 		drive = new DriveSubsystem();
+		drive.gyroReset();
 	}
 
 	/**
@@ -39,6 +42,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		drive.gyroReset();
 
 	}
 
@@ -95,17 +99,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Angle", OI.getDegrees(OI.mainJoy.getRawAxis(4), OI.mainJoy.getRawAxis(5)));
-		SmartDashboard.putNumber("Gyro", drive.getGyroAngle());
-		SmartDashboard.putString("New output",
-				Math.floor(output()[0] * 100) / 100d + " x:" + Math.floor(output()[1] * 100) / 100d + " y");
-	}
+		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
 
-	private double[] output() {
-		double angle = 0;
-		angle += drive.getGyroAngle() + OI.getDegrees(OI.mainJoy.getRawAxis(4), OI.mainJoy.getRawAxis(5));
-		angle *= (Math.PI / 180);
-		return new double[] { Math.sin(angle), Math.cos(angle) };
 	}
 
 	/**

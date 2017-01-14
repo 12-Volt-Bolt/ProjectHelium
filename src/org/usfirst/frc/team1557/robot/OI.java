@@ -33,4 +33,17 @@ public class OI {
 
 	}
 
+	/**
+	 * Returns the magnitude of the given joystick <u><b>hopefully</b></u>
+	 * <sup>TM</sup> with a maximum of 1 and a minimum of 0
+	 * 
+	 * @param joy
+	 * @param xAxisID
+	 * @param yAxisID
+	 * @return
+	 */
+	public static double getMagnitude(Joystick joy, int xAxisID, int yAxisID) {
+		return Math.sqrt(Math.pow(joy.getRawAxis(xAxisID), 2) + Math.pow(joy.getRawAxis(yAxisID), 2));
+	}
+
 }
