@@ -22,7 +22,6 @@ public class Robot extends IterativeRobot {
 	public static DriveSubsystem drive;
 	public static OI oi;
 
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -85,9 +84,9 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		
+
 		drive.initDefaultCommand();
-	
+
 	}
 
 	/**
@@ -96,8 +95,17 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		
-		
+		SmartDashboard.putNumber("Angle", OI.getDegrees(OI.mainJoy.getRawAxis(4), OI.mainJoy.getRawAxis(5)));
+		SmartDashboard.putNumber("Gyro", drive.getGyroAngle());
+		SmartDashboard.putString("New output",
+				Math.floor(output()[0] * 100) / 100d + " x:" + Math.floor(output()[1] * 100) / 100d + " y");
+	}
+
+	private double[] output() {
+		double angle = 0;
+		angle += drive.getGyroAngle() + OI.getDegrees(OI.mainJoy.getRawAxis(4), OI.mainJoy.getRawAxis(5));
+		angle *= (Math.PI / 180);
+		return new double[] { Math.sin(angle), Math.cos(angle) };
 	}
 
 	/**
