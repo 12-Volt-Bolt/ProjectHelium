@@ -138,13 +138,15 @@ public class DriveSubsystem extends Subsystem {
 		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
 		// altJoy.getRawAxis(yAxisAlt)));
 		// double r = rotationPID.get();
+		SmartDashboard.putNumber("X", mainJoy.getRawAxis(xAxisMain));
+		SmartDashboard.putNumber("Y", mainJoy.getRawAxis(yAxisMain));
 		DecimalFormat m = new DecimalFormat("0.00");
 		SmartDashboard.putString("Output Values", m.format(output[0]) + ":" + m.format(output[1]));
 		double r = mainJoy.getRawAxis(xAxisAlt);
-		double fr = output[1] + r + output[0];
-		double fl = output[1] - r - output[0];
-		double rl = output[1] - r + output[0];
-		double rr = output[1] + r - output[0];
+		double fr = -output[1] + r + output[0];
+		double fl = -output[1] - r - output[0];
+		double rl = -output[1] - r + output[0];
+		double rr = -output[1] + r - output[0];
 		double highestValue = 1;
 		// (IF) ?THEN :ELSE
 		highestValue = (Math.abs(fr) > highestValue) ? Math.abs(fr) : highestValue;
@@ -170,22 +172,23 @@ public class DriveSubsystem extends Subsystem {
 		if (Math.abs(joy.getRawAxis(xAxis)) <= 0.09 && Math.abs(joy.getRawAxis(yAxis)) <= 0.09) {
 			return new double[] { 0, 0 };
 		}
-		/*
-		 * angle += OI.getDegrees(joy.getRawAxis(xAxis), joy.getRawAxis(yAxis));
-		 * 
-		 * angle += getGyroAngle(); SmartDashboard.putNumber("halp", angle);
-		 * angle *= (Math.PI / 180);
-		 */
-		// SmartDashboard.putNumber("tots rad dude", angle);
-		// double speed = OI.getMagnitude(joy, xAxis, yAxis);
-		double cosA = Math.cos(gyro.getAngle() * (Math.PI / 180));
-		double sinA = Math.sin(gyro.getAngle() * (Math.PI / 180));
-		double[] out = new double[2];
-		out[0] = joy.getRawAxis(xAxis) * cosA - joy.getRawAxis(yAxis) * sinA;
-		out[1] = joy.getRawAxis(xAxis) * sinA + joy.getRawAxis(yAxis) * cosA;
+		SmartDashboard.putNumber("Joystick", OI.getDegrees(joy.getRawAxis(xAxis), joy.getRawAxis(yAxis)));
+		angle += OI.getDegrees(joy.getRawAxis(xAxis), joy.getRawAxis(yAxis));
 
-		// return new double[] { Math.sin(angle) * speed, Math.cos(angle) *
-		// speed };
-		return out;
+		angle -= getGyroAngle();
+		angle *= (Math.PI / 180);
+
+		SmartDashboard.putNumber("new Angle ", angle * (180 / Math.PI));
+		double speed = OI.getMagnitude(joy, xAxis, yAxis);
+		// f double cosA = Math.cos(gyro.getAngle() * (Math.PI / 180));
+		// f double sinA = Math.sin(gyro.getAngle() * (Math.PI / 180));
+		// f double[] out = new double[2];
+		// f out[0] = joy.getRawAxis(xAxis) * cosA - joy.getRawAxis(yAxis) *
+		// sinA;
+		// f out[1] = joy.getRawAxis(xAxis) * sinA + joy.getRawAxis(yAxis) *
+		// cosA;
+
+		return new double[] { Math.sin(angle) * speed, Math.cos(angle) * speed };
+		// return out;
 	}
 }
