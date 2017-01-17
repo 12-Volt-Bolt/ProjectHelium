@@ -24,7 +24,7 @@ public class FODCommand extends Command {
 		// desiredAngle += OI.mainJoy.getDirectionDegrees();
 		// desiredAngle *= (Math.PI / 180);
 		// TODO: Get rid of magic numbers.
-		drive.fodDrive(OI.mainJoy, mainJoyXAxisID, mainJoyYAxisID, OI.mainJoy, 4, 5);
+		drive.fodDrive(OI.mainJoy, mainJoyXAxisID, mainJoyYAxisID, OI.mainJoy, mainJoyZAxisID, 5);
 	}
 
 }

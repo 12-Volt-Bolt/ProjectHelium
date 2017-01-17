@@ -23,5 +23,8 @@ public class RobotMap {
 	public static int mainJoyXAxisID = 0;
 	public static int mainJoyZAxisID = 3;
 	
+	public static int gyroResetButtonID = 1;
+	public static int climbButtonID = 2;
+	
 	public static int defenseJoyYAxisID = 0;
 }

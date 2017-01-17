@@ -1,7 +1,11 @@
 package org.usfirst.frc.team1557.robot;
 
+import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
+import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -15,7 +19,10 @@ public class OI {
 
 	// mainJoy is the twisty one for mecanum drive. It will be one the right
 	// side.
-	public static Joystick mainJoy = new Joystick(3);
+	public static Joystick mainJoy = new Joystick(0);
+	public static JoystickButton gyroResetButton = new JoystickButton(mainJoy, RobotMap.gyroResetButtonID);
+	public static JoystickButton climbButton = new JoystickButton(mainJoy, RobotMap.climbButtonID);
+	
 	// defenseJoy is a normal joystick for when we lower a wheel for defensive
 	// driving. It will only be used for defensive driving mode. It will be on
 	// the left side.
@@ -44,6 +51,12 @@ public class OI {
 	 */
 	public static double getMagnitude(Joystick joy, int xAxisID, int yAxisID) {
 		return Math.sqrt(Math.pow(joy.getRawAxis(xAxisID), 2) + Math.pow(joy.getRawAxis(yAxisID), 2));
+	}
+	
+	public void init() {
+		
+		climbButton.whileHeld(new ClimbCommand());
+		gyroResetButton.whileHeld(new GyroResetCommand());
 	}
 
 }
