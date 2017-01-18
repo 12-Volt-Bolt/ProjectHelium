@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1557.robot;
 
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
+import org.usfirst.frc.team1557.robot.commands.DefenseDriveCommand;
 import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,14 +20,15 @@ public class OI {
 
 	// mainJoy is the twisty one for mecanum drive. It will be one the right
 	// side.
-	public static Joystick mainJoy = new Joystick(0);
+	public static Joystick mainJoy = new Joystick(RobotMap.mainJoyID);
+	public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
 	public static JoystickButton gyroResetButton = new JoystickButton(mainJoy, RobotMap.gyroResetButtonID);
 	public static JoystickButton climbButton = new JoystickButton(mainJoy, RobotMap.climbButtonID);
+	public static JoystickButton defenseDriveButton = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonID);
 	
 	// defenseJoy is a normal joystick for when we lower a wheel for defensive
 	// driving. It will only be used for defensive driving mode. It will be on
 	// the left side.
-	public static Joystick defenseJoy; // = new Joystick(0);
 
 	/**
 	 * Returns the angle in degrees (Not Radians)
@@ -57,6 +59,8 @@ public class OI {
 		
 		climbButton.whileHeld(new ClimbCommand());
 		gyroResetButton.whileHeld(new GyroResetCommand());
+		defenseDriveButton.whenPressed(new DefenseDriveCommand());
+		
 	}
 
 }

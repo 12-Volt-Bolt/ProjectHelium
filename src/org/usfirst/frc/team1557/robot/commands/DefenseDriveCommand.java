@@ -23,13 +23,14 @@ public class DefenseDriveCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-
-		Robot.drive.defenseDrive(OI.defenseJoy.getRawAxis(RobotMap.defenseJoyYAxisID), RobotMap.mainJoyYAxisID);
+		
+		Robot.drive.defenseDrive(OI.defenseJoy.getRawAxis(RobotMap.defenseJoyYAxisID), OI.defenseJoy.getRawAxis(RobotMap.mainJoyYAxisID));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return false;
+		
+		return !OI.defenseDriveButton.get();
 	}
 
 	// Called once after isFinished returns true

@@ -18,6 +18,7 @@ public class RobotMap {
 	// public static int rangefinderModule = 1;
 	
 	public static int mainJoyID = 0;
+	public static int defenseJoyID = 1;
 	
 	public static int mainJoyYAxisID = 1;
 	public static int mainJoyXAxisID = 0;
@@ -26,5 +27,20 @@ public class RobotMap {
 	public static int gyroResetButtonID = 1;
 	public static int climbButtonID = 2;
 	
-	public static int defenseJoyYAxisID = 0;
+	public static int defenseJoyYAxisID = 1;
+	public static int defenseDriveButtonID = 1;
+	
+	public static int frontRightMotorID = 2;
+	public static int frontLeftMotorID = 3;
+	public static int rearRightMotorID = 1;
+	public static int rearLeftMotorID = 0;
+	
+	/** 
+	 * We don't actually know these IDs yet.
+	 */
+	public static int defenseRightMotorID = 4;
+	/** 
+	 * We don't actually know these IDs yet.
+	 */
+	public static int defenseLeftMotorID = 5;
 }

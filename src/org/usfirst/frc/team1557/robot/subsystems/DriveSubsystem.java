@@ -3,6 +3,7 @@ package org.usfirst.frc.team1557.robot.subsystems;
 import java.text.DecimalFormat;
 
 import org.usfirst.frc.team1557.robot.OI;
+import org.usfirst.frc.team1557.robot.RobotMap;
 import org.usfirst.frc.team1557.robot.commands.FODCommand;
 import org.usfirst.frc.team1557.robot.commands.MecanumDriveCommand;
 import com.ctre.CANTalon;
@@ -22,11 +23,14 @@ public class DriveSubsystem extends Subsystem {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
-	public static CANTalon frontRight = new CANTalon(2);
-	public static CANTalon frontLeft = new CANTalon(3);
-	public static CANTalon rearRight = new CANTalon(1);
-	public static CANTalon rearLeft = new CANTalon(0);
+	public static CANTalon frontRight = new CANTalon(RobotMap.frontRightMotorID);
+	public static CANTalon frontLeft = new CANTalon(RobotMap.frontLeftMotorID);
+	public static CANTalon rearRight = new CANTalon(RobotMap.rearRightMotorID);
+	public static CANTalon rearLeft = new CANTalon(RobotMap.rearLeftMotorID);
 	private ADXRS450_Gyro gyro;
+	public static CANTalon driveChange = new CANTalon(0);
+	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
+	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
 	// PIDController rotationPID = new PIDController(0, 0, 0, 0, gyro, new
 	// PIDOutput() {
 	//
@@ -130,6 +134,8 @@ public class DriveSubsystem extends Subsystem {
 		frontLeft.set(leftSpeed);
 		rearRight.set(rightSpeed);
 		rearLeft.set(leftSpeed);
+		defenseRight.set(rightSpeed);
+		defenseLeft.set(leftSpeed);
 
 	}
 
