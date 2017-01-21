@@ -22,27 +22,27 @@ import org.usfirst.frc.team1557.robot.vision.VisionBase;
  * directory.
  */
 public class Robot extends IterativeRobot {
-//	boolean running = false;
-//	Thread t = new Thread(new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			while (true)
-//				while (running) {
-//					vb.process();
-//					try {
-//						Thread.sleep(20);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//		}
-//	});
+	// boolean running = false;
+	// Thread t = new Thread(new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// while (true)
+	// while (running) {
+	// vb.process();
+	// try {
+	// Thread.sleep(20);
+	// } catch (InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	// });
 	public static DriveSubsystem drive;
 	public static ClimbSubsystem climb;
 	public static OI oi;
-	//VisionBase vb = new VisionBase();
+	VisionBase vb = new VisionBase();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -55,7 +55,8 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		oi.init();
 		drive.gyroReset();
-		// vb.init("MainCamera", "10.15.57.56");
+		vb.start("MainCamera", "10.15.57.90");
+		vb.startProcess();
 		// t.start();
 	}
 
@@ -67,7 +68,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		drive.gyroReset();
-		//running = false;
+		// running = false;
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		//running = true;
+		// running = true;
 		drive.initDefaultCommand();
 
 	}
@@ -122,8 +123,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	//	System.out.println("Post Porkcessing is a go!");
 		Scheduler.getInstance().run();
-		//vb.process();
+		// vb.process();
 		// vb.process();
 		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
 
