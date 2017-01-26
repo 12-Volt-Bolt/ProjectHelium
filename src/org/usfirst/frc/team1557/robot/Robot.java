@@ -50,13 +50,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		SmartDashboard.putNumber("P", 0.04);
+		SmartDashboard.putNumber("I", 0.00001);
+		SmartDashboard.putNumber("D", 0.0);
 		oi = new OI();
 		climb = new ClimbSubsystem();
 		drive = new DriveSubsystem();
 		oi.init();
 		drive.gyroReset();
-		vb.start("MainCamera", "10.15.57.90");
-		vb.startProcess();
+		// vb.start("MainCamera", "10.15.57.90");
+		// vb.startProcess();
+
 		// t.start();
 	}
 
@@ -115,6 +119,8 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		// running = true;
 		drive.initDefaultCommand();
+		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
+				SmartDashboard.getNumber("D", 0.01));
 
 	}
 
@@ -123,7 +129,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-	//	System.out.println("Post Porkcessing is a go!");
+		// System.out.println("Post Porkcessing is a go!");
 		Scheduler.getInstance().run();
 		// vb.process();
 		// vb.process();

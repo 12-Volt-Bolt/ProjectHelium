@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,17 +29,11 @@ public class DriveSubsystem extends Subsystem {
 	public static CANTalon frontLeft = new CANTalon(RobotMap.frontLeftMotorID);
 	public static CANTalon rearRight = new CANTalon(RobotMap.rearRightMotorID);
 	public static CANTalon rearLeft = new CANTalon(RobotMap.rearLeftMotorID);
-	private ADXRS450_Gyro gyro;
+	private static ADXRS450_Gyro gyro;
 	public static CANTalon driveChange = new CANTalon(0);
 	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
 	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
-	// PIDController rotationPID = new PIDController(0, 0, 0, 0, gyro, new
-	// PIDOutput() {
-	//
-	// @Override
-	// public void pidWrite(double output) {
-	// }
-	// });
+	public static PIDController rotationPID;
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
@@ -57,13 +53,28 @@ public class DriveSubsystem extends Subsystem {
 	private void init() {
 		gyro = new ADXRS450_Gyro();
 		gyro.calibrate();
+		rotationPID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
+				SmartDashboard.getNumber("D", 0.01), 0, gyro, new PIDOutput() {
+
+					@Override
+					public void pidWrite(double output) {
+						SmartDashboard.putNumber("pid out", output);
+					}
+				});
+
+		rotationPID.setContinuous();
+		rotationPID.setInputRange(-180, 180);
+		rotationPID.enable();
+		rotationPID.setAbsoluteTolerance(6);
 	}
 
 	public void gyroReset() {
+		rotationPID.reset();
 		gyro.reset();
+		rotationPID.setSetpoint(getGyroAngle());
 	}
 
-	public double getGyroAngle() {
+	public static double getGyroAngle() {
 
 		double gyroAngle = gyro.getAngle();
 
@@ -79,6 +90,10 @@ public class DriveSubsystem extends Subsystem {
 		}
 
 		return gyroAngle;
+	}
+
+	public void setGyroSetpoint(double d) {
+		rotationPID.setSetpoint(d);
 	}
 
 	public void mecanumDrive(double x, double y, double r) {
@@ -139,7 +154,11 @@ public class DriveSubsystem extends Subsystem {
 
 	}
 
-	public void fodDrive(Joystick mainJoy, int xAxisMain, int yAxisMain, Joystick altJoy, int xAxisAlt, int yAxisAlt) {
+	public void fodDrive(Joystick mainJoy, int xAxisMain, int yAxisMain, Joystick altJoy, int xAxisAlt, int yAxisAlt,
+			boolean rotationRelativeToJoystick) {
+		rotationPID.enable();
+		rotationPID.setAbsoluteTolerance(2);
+		System.out.println(rotationPID.isEnabled());
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
 		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
 		// altJoy.getRawAxis(yAxisAlt)));
@@ -148,7 +167,13 @@ public class DriveSubsystem extends Subsystem {
 		SmartDashboard.putNumber("Y", mainJoy.getRawAxis(yAxisMain));
 		DecimalFormat m = new DecimalFormat("0.00");
 		SmartDashboard.putString("Output Values", m.format(output[0]) + ":" + m.format(output[1]));
-		double r = mainJoy.getRawAxis(xAxisAlt);
+		double r = rotationPID.get();
+		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
+			r = altJoy.getRawAxis(xAxisAlt);
+			rotationPID.setSetpoint(getGyroAngle());
+		}
+		SmartDashboard.putNumber("rot", r);
+		SmartDashboard.putNumber("Error Graph", rotationPID.getError());
 		double fr = -output[1] + r + output[0];
 		double fl = -output[1] - r - output[0];
 		double rl = -output[1] - r + output[0];
@@ -165,11 +190,18 @@ public class DriveSubsystem extends Subsystem {
 		rl = rl / highestValue;
 		rr = rr / highestValue;
 
+		
 		fl = -fl;
 		frontRight.set(-fr);
 		rearRight.set(-rr / 2);
 		rearLeft.set(-rl / 2);
 		frontLeft.set(-fl);
+	}
+
+	private double getRotation(double rot) {
+		// TODO: Add some form of deadzone for setting new setpoints. Maybe ~5
+		// degree allowance.
+		return rotationPID.get();
 	}
 
 	private double[] output(Joystick joy, int xAxis, int yAxis) {
