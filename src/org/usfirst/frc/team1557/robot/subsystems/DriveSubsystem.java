@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- *
+ * :cactus: :camel:
  */
 public class DriveSubsystem extends Subsystem {
 
@@ -149,8 +149,10 @@ public class DriveSubsystem extends Subsystem {
 		frontLeft.set(leftSpeed);
 		rearRight.set(rightSpeed);
 		rearLeft.set(leftSpeed);
-		defenseRight.set(rightSpeed);
-		defenseLeft.set(leftSpeed);
+		// Natalie, the value is .68; however, as you mentioned, you should be
+		// multiplying by the fractions to avoid the small rounding error.
+		defenseRight.set(rightSpeed * .8 * .85);
+		defenseLeft.set(leftSpeed * .8 * .85);
 
 	}
 
@@ -190,18 +192,11 @@ public class DriveSubsystem extends Subsystem {
 		rl = rl / highestValue;
 		rr = rr / highestValue;
 
-		
 		fl = -fl;
 		frontRight.set(-fr);
 		rearRight.set(-rr / 2);
 		rearLeft.set(-rl / 2);
 		frontLeft.set(-fl);
-	}
-
-	private double getRotation(double rot) {
-		// TODO: Add some form of deadzone for setting new setpoints. Maybe ~5
-		// degree allowance.
-		return rotationPID.get();
 	}
 
 	private double[] output(Joystick joy, int xAxis, int yAxis) {

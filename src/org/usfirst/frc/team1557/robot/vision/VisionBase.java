@@ -90,7 +90,7 @@ public class VisionBase {
 					// This is where the image processing code goes.
 					if (process) {
 						try {
-							Thread.sleep(50);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -100,9 +100,9 @@ public class VisionBase {
 						double[] color = currentPureFrame.get(120, 160);
 						System.out.println(color[0] + " : " + color[1] + " : " + color[2]);
 						postProcessingFrame = currentPureFrame;
-						cam.setExposureManual(20);
-						cam.setBrightness(80);
-						cam.setWhiteBalanceManual(50);
+						// cam.setExposureManual(20);
+						// cam.setBrightness(80);
+						// cam.setWhiteBalanceManual(50);
 
 						/*
 						 * Basic theory: Go! After acquiring the image, you
@@ -117,20 +117,24 @@ public class VisionBase {
 						 * 
 						 */
 						if (true) {
-							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_BGR2HSV);
-							Imgproc.blur(postProcessingFrame, postProcessingFrame, new Size(5, 5));
-							Core.inRange(postProcessingFrame, new Scalar(70, 120, 120), new Scalar(100, 255, 255),
+							// Imgproc.cvtColor(postProcessingFrame,
+							// postProcessingFrame, Imgproc.COLOR_BGR2HSV);
+							// Imgproc.blur(postProcessingFrame,
+							// postProcessingFrame, new Size(1, 1)); //:100:
+							// :+1: :100:
+							Core.inRange(postProcessingFrame, new Scalar(70, 120, 70), new Scalar(100, 255, 255),
 									postProcessingFrame);
-							Imgproc.findContours(postProcessingFrame, contours, new Mat(), Imgproc.RETR_LIST,
-									Imgproc.CHAIN_APPROX_SIMPLE);
-							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
+							// Imgproc.findContours(postProcessingFrame,
+							// contours, new Mat(), Imgproc.RETR_LIST,
+							// Imgproc.CHAIN_APPROX_SIMPLE);
+							// Imgproc.cvtColor(postProcessingFrame,
+							// postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
 							outputStream.putFrame(postProcessingFrame);
-							SmartDashboard.putNumber("Contours", contours.size());
+							// SmartDashboard.putNumber("Contours",
+							// contours.size());
 							// secondaryOutput.putFrame(currentPureFrame);
-						} else if (false) {
-						} else if (false) {
+							// contours.clear();
 						}
-						// outputStream.putFrame(postProcessingFrame);
 					}
 				}
 			}
