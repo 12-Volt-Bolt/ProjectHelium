@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		oi.init();
 		drive.gyroReset();
-		vb.start("MainCamera", "10.15.57.90");
+		vb.start("MainCamera", "10.15.57.10");
 		vb.startProcess();
 
 		// t.start();

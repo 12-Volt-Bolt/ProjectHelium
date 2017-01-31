@@ -28,7 +28,7 @@ public class RobotMap {
 	public static int climbButtonID = 2;
 	
 	public static int defenseJoyYAxisID = 1;
-	public static int defenseDriveButtonID = 1;
+	public static int defenseDriveButtonID = 3;
 	
 	public static int frontRightMotorID = 2;
 	public static int frontLeftMotorID = 3;
@@ -38,7 +38,7 @@ public class RobotMap {
 	/** 
 	 * We don't actually know these IDs yet.
 	 */
-	public static int defenseRightMotorID = 4;
+	public static int defenseRightMotorID = 6;
 	/** 
 	 * We don't actually know these IDs yet.
 	 */

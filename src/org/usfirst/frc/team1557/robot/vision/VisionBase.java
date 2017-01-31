@@ -12,6 +12,8 @@ import java.util.Random;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 
@@ -22,7 +24,12 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionBase {
-
+	final double FOV_of_M1011 = 61;
+	final double cameraWidth = 320;
+	final double degreesPerPixel;
+	{
+		degreesPerPixel = (double) (FOV_of_M1011/* degrees */ / cameraWidth /* pixels */);
+	}
 	// DriverStation images/video
 	AxisCamera cam;
 	/**
@@ -36,6 +43,7 @@ public class VisionBase {
 	 */
 	CvSource outputStream;
 	CvSource secondaryOutput;
+	// CvSource tertiaryOutput;
 	/**
 	 * This object should be kept pure. Any processing should be applied to the
 	 * postProcessingFrame
@@ -74,12 +82,16 @@ public class VisionBase {
 
 				// Camera setup code
 				cam = CameraServer.getInstance().addAxisCamera(name, ip);
-
+				cam.setBrightness(0);
+				cam.setWhiteBalanceHoldCurrent();
+				cam.setExposureHoldCurrent();
 				cam.setResolution(320, 240);
 				sink = CameraServer.getInstance().getVideo();
 				outputStream = CameraServer.getInstance().putVideo("Post Porkcessing", 320, 240);
 				secondaryOutput = CameraServer.getInstance().putVideo("Post Porkcessing 2: Electric Boogaloo", 320,
 						240);
+				// tertiaryOutput = CameraServer.getInstance().putVideo("Post
+				// Porkcessing 3: Finalmente", 320, 240);
 				// When using a Mat object, you must first create an empty
 				// object of it before doing anything.
 				currentPureFrame = new Mat();
@@ -117,29 +129,82 @@ public class VisionBase {
 						 * 
 						 */
 						if (true) {
-							// Imgproc.cvtColor(postProcessingFrame,
-							// postProcessingFrame, Imgproc.COLOR_BGR2HSV);
+							cam.setBrightness(20);
+							cam.setWhiteBalanceHoldCurrent();
+							cam.setExposureHoldCurrent();
 							// Imgproc.blur(postProcessingFrame,
 							// postProcessingFrame, new Size(1, 1)); //:100:
 							// :+1: :100:
-							Core.inRange(postProcessingFrame, new Scalar(70, 120, 70), new Scalar(100, 255, 255),
+
+							// Core.inRange(postProcessingFrame, new Scalar(70,
+							// 150, 0), new Scalar(390, 360, 360),
+							// postProcessingFrame);
+							// cam.setExposureHoldCurrent();
+							// cam.setWhiteBalanceHoldCurrent();
+							Mat copy = postProcessingFrame.clone();
+
+							Imgproc.cvtColor(copy, copy, Imgproc.COLOR_BGR2GRAY);
+							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_BGR2RGB);
+							Core.inRange(postProcessingFrame, new Scalar(0, 50, 0), new Scalar(255, 255, 255),
 									postProcessingFrame);
-							// Imgproc.findContours(postProcessingFrame,
-							// contours, new Mat(), Imgproc.RETR_LIST,
-							// Imgproc.CHAIN_APPROX_SIMPLE);
-							// Imgproc.cvtColor(postProcessingFrame,
-							// postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
-							outputStream.putFrame(postProcessingFrame);
+							Imgproc.blur(copy, copy, new Size(2, 2));
+							Imgproc.threshold(copy, copy, 40, 255, Imgproc.THRESH_BINARY);
+
+							Mat and = copy.clone();
+							Core.bitwise_and(copy, postProcessingFrame, and);
+
+							MatOfPoint m = new MatOfPoint();
+
+							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
+
 							// SmartDashboard.putNumber("Contours",
 							// contours.size());
-							// secondaryOutput.putFrame(currentPureFrame);
+							secondaryOutput.putFrame(copy);
+							Imgproc.findContours(and, contours, new Mat(), Imgproc.RETR_LIST,
+									Imgproc.CHAIN_APPROX_SIMPLE);
+							double[] XY = findXY(contours.get(findLargestContour(contours)));
+							SmartDashboard.putNumber("X degrees off", XY[0] * degreesPerPixel);
+							Imgproc.drawContours(and, contours, findLargestContour(contours),
+									new Scalar(200, 100, 200));
+							Imgproc.cvtColor(and, and, Imgproc.COLOR_GRAY2BGR);
+							Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
+									new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
 							// contours.clear();
+							outputStream.putFrame(and);
+							contours.clear();
 						}
 					}
 				}
 			}
 		}).start();
 
+	}
+
+	int findLargestContour(ArrayList<MatOfPoint> m) {
+		double largestArea = 0;
+		int id = 0;
+		for (int i = 0; i < m.size(); i++) {
+			if (Imgproc.contourArea(m.get(i)) > largestArea) {
+				largestArea = Imgproc.contourArea(m.get(i));
+				id = i;
+			}
+		}
+		return id;
+	}
+
+	/**
+	 * does stuff
+	 * 
+	 * @param m
+	 * @return no probs
+	 */
+	double[] findXY(MatOfPoint m) {
+		Rect r = Imgproc.boundingRect(m);
+		double x = r.x + r.width / 2;
+		double y = r.y + r.height / 2;
+		x -= 320 / 2;
+		y -= 240 / 120;
+		return new double[] { x, y };
 	}
 
 	/**

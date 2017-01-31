@@ -4,9 +4,13 @@ import java.text.DecimalFormat;
 
 import org.usfirst.frc.team1557.robot.OI;
 import org.usfirst.frc.team1557.robot.RobotMap;
+import org.usfirst.frc.team1557.robot.commands.DefenseDriveCommand;
+import org.usfirst.frc.team1557.robot.commands.EncoderDriveCommand;
 import org.usfirst.frc.team1557.robot.commands.FODCommand;
 import org.usfirst.frc.team1557.robot.commands.MecanumDriveCommand;
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
@@ -40,7 +44,8 @@ public class DriveSubsystem extends Subsystem {
 		// setDefaultCommand(new MySpecialCommand());
 
 		// Take this, Natalie. //setDefaultCommand(new MecanumDriveCommand());
-		setDefaultCommand(new FODCommand());
+		setDefaultCommand(new EncoderDriveCommand());
+
 	}
 
 	// add r to right subtract r from left
@@ -151,8 +156,8 @@ public class DriveSubsystem extends Subsystem {
 		rearLeft.set(leftSpeed);
 		// Natalie, the value is .68; however, as you mentioned, you should be
 		// multiplying by the fractions to avoid the small rounding error.
-		defenseRight.set(rightSpeed * .8 * .85);
-		defenseLeft.set(leftSpeed * .8 * .85);
+		defenseRight.set(rightSpeed); // * .8 * .85);
+		defenseLeft.set(leftSpeed); // * .8 * .85);
 
 	}
 
@@ -223,5 +228,19 @@ public class DriveSubsystem extends Subsystem {
 
 		return new double[] { Math.sin(angle) * speed, Math.cos(angle) * speed };
 		// return out;
+	}
+
+	public void encoderTest() {
+
+		defenseRight.setProfile(0);
+		defenseRight.reverseOutput(true);
+		defenseRight.setPID(0.1, 0.0, 0);
+		defenseRight.setAllowableClosedLoopErr(0);
+		defenseRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		defenseRight.setEncPosition(0);
+		defenseRight.changeControlMode(TalonControlMode.Position);
+		defenseRight.setSetpoint(defenseRight.getSetpoint() + 1);
+		System.out.println(defenseRight.getEncPosition());
+
 	}
 }

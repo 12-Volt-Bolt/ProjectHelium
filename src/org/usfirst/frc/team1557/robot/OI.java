@@ -26,6 +26,7 @@ public class OI {
 	public static JoystickButton climbButton = new JoystickButton(mainJoy, RobotMap.climbButtonID);
 	public static JoystickButton defenseDriveButton = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonID);
 	
+	
 	// defenseJoy is a normal joystick for when we lower a wheel for defensive
 	// driving. It will only be used for defensive driving mode. It will be on
 	// the left side.
