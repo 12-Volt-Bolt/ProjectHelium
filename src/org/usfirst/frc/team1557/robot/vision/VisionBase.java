@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1557.robot.vision;
 
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team1557.robot.OI;
 
 import java.awt.Color;
 import java.net.MalformedURLException;
@@ -67,6 +68,14 @@ public class VisionBase {
 
 	}
 
+	// NOTE: Thanks to Nicholas, I was able to find out what causes the too many
+	// client streams error. The error is thrown whenever we are no longer
+	// sending frames often enough to the smartdashboard stream, as I expected.
+	// However! Any errors that are thrown within this thread will kill the
+	// thread. Subsequently, ANY errors not caught in this thread will crash
+	// this thread and print out that error. Also, you will need to change the
+	// print settings on the driverstation in order to see the actual error that
+	// caused the crash.
 	/**
 	 * Start running the camera. It doesn't start processing the images until
 	 * you call
@@ -110,7 +119,8 @@ public class VisionBase {
 						// Acquires the current frame from the camera
 						sink.grabFrame(currentPureFrame);
 						double[] color = currentPureFrame.get(120, 160);
-						System.out.println(color[0] + " : " + color[1] + " : " + color[2]);
+						if (OI.mainJoy.getRawButton(1))
+							System.out.println(color[0] + " : " + color[1] + " : " + color[2]);
 						postProcessingFrame = currentPureFrame;
 						// cam.setExposureManual(20);
 						// cam.setBrightness(80);
@@ -145,39 +155,49 @@ public class VisionBase {
 
 							Imgproc.cvtColor(copy, copy, Imgproc.COLOR_BGR2GRAY);
 							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_BGR2RGB);
-							Core.inRange(postProcessingFrame, new Scalar(0, 50, 0), new Scalar(255, 255, 255),
+							Core.inRange(postProcessingFrame, new Scalar(0, 80, 0), new Scalar(180, 180, 180),
 									postProcessingFrame);
 							Imgproc.blur(copy, copy, new Size(2, 2));
 							Imgproc.threshold(copy, copy, 40, 255, Imgproc.THRESH_BINARY);
 
 							Mat and = copy.clone();
 							Core.bitwise_and(copy, postProcessingFrame, and);
-
-							MatOfPoint m = new MatOfPoint();
-
 							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
 
 							// SmartDashboard.putNumber("Contours",
 							// contours.size());
-							secondaryOutput.putFrame(copy);
+							secondaryOutput.putFrame(postProcessingFrame);
 							Imgproc.findContours(and, contours, new Mat(), Imgproc.RETR_LIST,
 									Imgproc.CHAIN_APPROX_SIMPLE);
-							double[] XY = findXY(contours.get(findLargestContour(contours)));
-							SmartDashboard.putNumber("X degrees off", XY[0] * degreesPerPixel);
-							Imgproc.drawContours(and, contours, findLargestContour(contours),
-									new Scalar(200, 100, 200));
-							Imgproc.cvtColor(and, and, Imgproc.COLOR_GRAY2BGR);
-							Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
-									new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
-							// contours.clear();
-							outputStream.putFrame(and);
-							contours.clear();
+							try {
+								double[] XY = findXY(contours.get(findLargestContour(contours)));
+								SmartDashboard.putNumber("X degrees off", XY[0] * degreesPerPixel);
+								Imgproc.drawContours(and, contours, findLargestContour(contours),
+										new Scalar(200, 100, 200));
+								Imgproc.cvtColor(and, and, Imgproc.COLOR_GRAY2BGR);
+								Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
+										new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
+								// contours.clear();
+								outputStream.putFrame(and);
+								contours.clear();
+							} catch (IndexOutOfBoundsException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
 			}
 		}).start();
 
+	}
+
+	Object lock = new Object();
+	private double angleOff = 0;
+
+	void setAngleOff(double newAngle) {
+		synchronized (lock) {
+			this.angleOff = newAngle;
+		}
 	}
 
 	int findLargestContour(ArrayList<MatOfPoint> m) {

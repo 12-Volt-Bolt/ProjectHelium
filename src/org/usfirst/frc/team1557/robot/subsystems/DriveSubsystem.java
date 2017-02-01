@@ -43,8 +43,10 @@ public class DriveSubsystem extends Subsystem {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 
-		// Take this, Natalie. //setDefaultCommand(new MecanumDriveCommand());
-		setDefaultCommand(new EncoderDriveCommand());
+		// Take this, Natalie.
+		//setDefaultCommand(new MecanumDriveCommand());
+		setDefaultCommand(new FODCommand());
+		// setDefaultCommand(new EncoderDriveCommand());
 
 	}
 
@@ -165,7 +167,7 @@ public class DriveSubsystem extends Subsystem {
 			boolean rotationRelativeToJoystick) {
 		rotationPID.enable();
 		rotationPID.setAbsoluteTolerance(2);
-		System.out.println(rotationPID.isEnabled());
+		//System.out.println(rotationPID.isEnabled());
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
 		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
 		// altJoy.getRawAxis(yAxisAlt)));
