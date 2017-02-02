@@ -7,8 +7,11 @@ import org.usfirst.frc.team1557.robot.RobotMap;
 import org.usfirst.frc.team1557.robot.commands.FODCommand;
 import org.usfirst.frc.team1557.robot.commands.MecanumDriveCommand;
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -31,6 +34,7 @@ public class DriveSubsystem extends Subsystem {
 	public static CANTalon driveChange = new CANTalon(0);
 	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
 	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
+	 
 	// PIDController rotationPID = new PIDController(0, 0, 0, 0, gyro, new
 	// PIDOutput() {
 	//
@@ -38,6 +42,10 @@ public class DriveSubsystem extends Subsystem {
 	// public void pidWrite(double output) {
 	// }
 	// });
+	
+	  // hapticfb method 
+	public static void hapticFB(int i, float value)  {
+		OI.mainJoy.setRumble(RumbleType.kRightRumble, 1); }
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
@@ -130,13 +138,18 @@ public class DriveSubsystem extends Subsystem {
 
 	public void defenseDrive(double leftSpeed, double rightSpeed) {
 
+		// multiplying tires by .8 to compensate for circumference differences
+		// multiply tires by .85 to compensate for gear ratio differences
+		
 		frontRight.set(rightSpeed);
 		frontLeft.set(leftSpeed);
 		rearRight.set(rightSpeed);
 		rearLeft.set(leftSpeed);
-		defenseRight.set(rightSpeed);
-		defenseLeft.set(leftSpeed);
-
+		defenseRight.set(rightSpeed * .8 * .85);
+		defenseLeft.set(leftSpeed * .8 * .85);
+	
+		
+		
 	}
 
 	public void fodDrive(Joystick mainJoy, int xAxisMain, int yAxisMain, Joystick altJoy, int xAxisAlt, int yAxisAlt) {
@@ -196,5 +209,7 @@ public class DriveSubsystem extends Subsystem {
 
 		return new double[] { Math.sin(angle) * speed, Math.cos(angle) * speed };
 		// return out;
-	}
+		
+		 
+			}
 }

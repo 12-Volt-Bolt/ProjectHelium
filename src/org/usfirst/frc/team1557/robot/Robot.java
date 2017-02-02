@@ -1,7 +1,9 @@
 
 package org.usfirst.frc.team1557.robot;
 
+//import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -114,8 +116,8 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		// running = true;
-		drive.initDefaultCommand();
-
+		
+	   
 	}
 
 	/**
@@ -128,7 +130,12 @@ public class Robot extends IterativeRobot {
 		// vb.process();
 		// vb.process();
 		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
-
+drive.initDefaultCommand();
+		
+// may or may not activate hapticfb method
+		 //DriveSubsystem.hapticFB(RumbleType.kLeftRumble, 1);
+		    DriveSubsystem.hapticFB(1, MAIN_THREAD_ID);
+         //OI.Rumble(1, 1);	
 	}
 
 	/**

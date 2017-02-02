@@ -12,6 +12,7 @@ import java.util.Random;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 
@@ -85,6 +86,7 @@ public class VisionBase {
 				currentPureFrame = new Mat();
 				postProcessingFrame = new Mat();
 				ArrayList<MatOfPoint> contours = new ArrayList<>();
+				ArrayList<Rect> boundingRectangle = new ArrayList<>();
 
 				while (true) {
 					// This is where the image processing code goes.
@@ -123,7 +125,21 @@ public class VisionBase {
 									postProcessingFrame);
 							Imgproc.findContours(postProcessingFrame, contours, new Mat(), Imgproc.RETR_LIST,
 									Imgproc.CHAIN_APPROX_SIMPLE);
+							for (int index = 0; index < contours.size(); index++) {
+								boundingRectangle.add(Imgproc.boundingRect(contours.get(index)));
+							}
+							
+							//do I need to draw them to use them? I think so?
+							for (int index = 0; index < contours.size(); index++) {
+								Imgproc.drawContours(postProcessingFrame, contours, index, new Scalar(255, 255, 255));
+								Imgproc.rectangle(postProcessingFrame, boundingRectangle.get(index).tl(), boundingRectangle.get(index).br(), new Scalar(255, 255, 255));
+							}
+							
+							
+							
+							
 							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
+							
 							outputStream.putFrame(postProcessingFrame);
 							SmartDashboard.putNumber("Contours", contours.size());
 							// secondaryOutput.putFrame(currentPureFrame);
