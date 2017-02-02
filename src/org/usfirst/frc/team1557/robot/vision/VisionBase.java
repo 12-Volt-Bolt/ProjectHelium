@@ -169,7 +169,7 @@ public class VisionBase {
 							secondaryOutput.putFrame(postProcessingFrame);
 							Imgproc.findContours(and, contours, new Mat(), Imgproc.RETR_LIST,
 									Imgproc.CHAIN_APPROX_SIMPLE);
-							try {
+							if (contours.size() > 0) {
 								double[] XY = findXY(contours.get(findLargestContour(contours)));
 								SmartDashboard.putNumber("X degrees off", XY[0] * degreesPerPixel);
 								Imgproc.drawContours(and, contours, findLargestContour(contours),
@@ -178,11 +178,14 @@ public class VisionBase {
 								Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
 										new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
 								// contours.clear();
-								outputStream.putFrame(and);
-								contours.clear();
-							} catch (IndexOutOfBoundsException e) {
-								e.printStackTrace();
 							}
+							outputStream.putFrame(and);
+							contours.clear();
+							and.release();
+							copy.release();
+							postProcessingFrame.release();
+							currentPureFrame.release();
+
 						}
 					}
 				}
@@ -198,6 +201,15 @@ public class VisionBase {
 		synchronized (lock) {
 			this.angleOff = newAngle;
 		}
+	}
+
+	public double getAngleOff() {
+		double d;
+		synchronized (lock) {
+			d = angleOff;
+		}
+		return d;
+
 	}
 
 	int findLargestContour(ArrayList<MatOfPoint> m) {

@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	public static DriveSubsystem drive;
 	public static ClimbSubsystem climb;
 	public static OI oi;
-	VisionBase vb = new VisionBase();
+	public static VisionBase vb = new VisionBase();
 
 	/**
 	 * This function is run when the robot is first started up and should be

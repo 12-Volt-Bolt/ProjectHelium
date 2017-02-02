@@ -3,6 +3,7 @@ package org.usfirst.frc.team1557.robot.subsystems;
 import java.text.DecimalFormat;
 
 import org.usfirst.frc.team1557.robot.OI;
+import org.usfirst.frc.team1557.robot.Robot;
 import org.usfirst.frc.team1557.robot.RobotMap;
 import org.usfirst.frc.team1557.robot.commands.DefenseDriveCommand;
 import org.usfirst.frc.team1557.robot.commands.EncoderDriveCommand;
@@ -44,7 +45,7 @@ public class DriveSubsystem extends Subsystem {
 		// setDefaultCommand(new MySpecialCommand());
 
 		// Take this, Natalie.
-		//setDefaultCommand(new MecanumDriveCommand());
+		// setDefaultCommand(new MecanumDriveCommand());
 		setDefaultCommand(new FODCommand());
 		// setDefaultCommand(new EncoderDriveCommand());
 
@@ -167,7 +168,7 @@ public class DriveSubsystem extends Subsystem {
 			boolean rotationRelativeToJoystick) {
 		rotationPID.enable();
 		rotationPID.setAbsoluteTolerance(2);
-		//System.out.println(rotationPID.isEnabled());
+		// System.out.println(rotationPID.isEnabled());
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
 		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
 		// altJoy.getRawAxis(yAxisAlt)));
@@ -176,11 +177,18 @@ public class DriveSubsystem extends Subsystem {
 		SmartDashboard.putNumber("Y", mainJoy.getRawAxis(yAxisMain));
 		DecimalFormat m = new DecimalFormat("0.00");
 		SmartDashboard.putString("Output Values", m.format(output[0]) + ":" + m.format(output[1]));
-		double r = rotationPID.get();
-		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
-			r = altJoy.getRawAxis(xAxisAlt);
-			rotationPID.setSetpoint(getGyroAngle());
-		}
+		double r = 0;
+		// if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
+		// r = altJoy.getRawAxis(xAxisAlt);
+		// rotationPID.setSetpoint(getGyroAngle());
+		// } else if (mainJoy.getRawButton(4)) {
+		r = rotationPID.get();
+		if (mainJoy.getRawButton(4))
+			rotationPID.setSetpoint(getGyroAngle() + SmartDashboard.getNumber("X degrees off", 0));
+		SmartDashboard.putNumber("angleOff", Robot.vb.getAngleOff());
+		// }else{
+		// r = rotationPID.get();
+		// }
 		SmartDashboard.putNumber("rot", r);
 		SmartDashboard.putNumber("Error Graph", rotationPID.getError());
 		double fr = -output[1] + r + output[0];
