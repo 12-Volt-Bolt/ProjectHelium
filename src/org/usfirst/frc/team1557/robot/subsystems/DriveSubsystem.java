@@ -254,8 +254,8 @@ public class DriveSubsystem extends Subsystem {
 
 	}
 
-	private double leftEncSpeed = 0;
-	private double rightEncSpeed = 0;
+	public PIDController leftPID;
+	public PIDController rightPID;
 
 	/**
 	 * Used to initialize the left and right encoder PIDControllers using a
@@ -265,69 +265,66 @@ public class DriveSubsystem extends Subsystem {
 	 *            The distance to travel in inches
 	 */
 	public void initEncoderDrive(double distance) {
-		double rotations = distance / 31.42;
-		PIDController leftPID = new PIDController(0, 0, 0, 0, new PIDSource() {
+		// Convert inches to rotations of a wheel.
+		double rotations = distance / 31.42; // 31.42 is the cirvumference of
+												// the center tires.
+		leftPID = new PIDController(0, 0, 0, 0, new PIDSource() {
 			PIDSourceType p;
+
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) {
-				// TODO Auto-generated method stub
 				this.p = pidSource;
 			}
-			
+
 			@Override
 			public double pidGet() {
-				// TODO Auto-generated method stub
 				return defenseLeft.getEncPosition();
 			}
-			
+
 			@Override
 			public PIDSourceType getPIDSourceType() {
-				// TODO Auto-generated method stub
 				return p;
 			}
 		}, new PIDOutput() {
-			
+
 			@Override
 			public void pidWrite(double output) {
-				// TODO Auto-generated method stub
-				leftEncSpeed = output;
+				// We can just call pid.get() instead of storing the output
 			}
 		});
-		
-		PIDController rightPID = new PIDController(0, 0, 0, 0, new PIDSource() {
+
+		rightPID = new PIDController(0, 0, 0, 0, new PIDSource() {
 			PIDSourceType t;
+
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) {
-				// TODO Auto-generated method stub
 				t = pidSource;
 			}
-			
+
 			@Override
 			public double pidGet() {
-				// TODO Auto-generated method stub
 				return defenseRight.getEncPosition();
 			}
-			
+
 			@Override
 			public PIDSourceType getPIDSourceType() {
-				// TODO Auto-generated method stub
 				return t;
 			}
 		}, new PIDOutput() {
-			
+
 			@Override
 			public void pidWrite(double output) {
-				// TODO Auto-generated method stub
-				rightEncSpeed = output;
+				// We can just call pid.get() instead of storing the output
 			}
 		});
-		
+
 		leftPID.setSetpoint(rotations);
 		rightPID.setSetpoint(rotations);
 		leftPID.enable();
 		rightPID.enable();
-		leftPID.setAbsoluteTolerance(1/16);
-		rightPID.setAbsoluteTolerance(1/16);;
+		leftPID.setAbsoluteTolerance(1 / 16);
+		rightPID.setAbsoluteTolerance(1 / 16);
+		;
 	}
 
 	/**
@@ -335,6 +332,48 @@ public class DriveSubsystem extends Subsystem {
 	 * using the left and right encoder PIDControllers
 	 */
 	public void encoderDrive() {
-	
+		// Set the speed of the defense wheels while taking into account the
+		// cirvumference difference and the different gear ratios.
+		defenseRight.set(rightPID.get() * .85 * .8);
+		defenseLeft.set(leftPID.get() * .85 * .8);
+		// set the speed of the right mecanum wheels using the relevant PID
+		frontRight.set(rightPID.get());
+		rearRight.set(rightPID.get());
+		// set the speed of the left mecanum wheels using the relevant PID
+		rearLeft.set(leftPID.get());
+		frontLeft.set(leftPID.get());
 	}
+
+	public void turnOnlyDrive(boolean isDefenseDrive) {
+		if (isDefenseDrive) {
+			defenseRight.set(-autonomousTurnPID.get() * .85 * .8);
+			defenseLeft.set(autonomousTurnPID.get() * .85 * .8);
+		}
+		// set the speed of the right mecanum wheels using the relevant PID
+		frontRight.set(-autonomousTurnPID.get());
+		rearRight.set(-autonomousTurnPID.get());
+		// set the speed of the left mecanum wheels using the relevant PID
+		rearLeft.set(autonomousTurnPID.get());
+		frontLeft.set(autonomousTurnPID.get());
+	}
+
+	public PIDController autonomousTurnPID;
+
+	/**
+	 * @param setpoint
+	 *            The rotation to turn to relative to the field.
+	 */
+	public void turnOnlyInit(double setpoint) {
+		autonomousTurnPID = new PIDController(0, 0, 0, gyro, new PIDOutput() {
+
+			@Override
+			public void pidWrite(double output) {
+				// Again, we do not need to use this.
+
+			}
+		});
+		autonomousTurnPID.setSetpoint(setpoint);
+		autonomousTurnPID.isEnabled();
+	}
+
 }
