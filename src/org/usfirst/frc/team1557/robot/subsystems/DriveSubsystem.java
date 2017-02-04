@@ -5,10 +5,8 @@ import java.text.DecimalFormat;
 import org.usfirst.frc.team1557.robot.OI;
 import org.usfirst.frc.team1557.robot.Robot;
 import org.usfirst.frc.team1557.robot.RobotMap;
-import org.usfirst.frc.team1557.robot.commands.DefenseDriveCommand;
-import org.usfirst.frc.team1557.robot.commands.EncoderDriveCommand;
 import org.usfirst.frc.team1557.robot.commands.FODCommand;
-import org.usfirst.frc.team1557.robot.commands.MecanumDriveCommand;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
@@ -17,8 +15,6 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.text.DecimalFormat;
 
 import org.usfirst.frc.team1557.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1557.robot.vision.VisionBase;
 
@@ -43,6 +44,7 @@ public class Robot extends IterativeRobot {
 	public static ClimbSubsystem climb;
 	public static OI oi;
 	public static VisionBase vb = new VisionBase();
+	public static DefenseWheelsSubsystem defense;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -56,10 +58,12 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		climb = new ClimbSubsystem();
 		drive = new DriveSubsystem();
+		defense = new DefenseWheelsSubsystem();
 		oi.init();
 		drive.gyroReset();
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
+		
 
 		// t.start();
 	}
@@ -119,6 +123,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		// running = true;
 		drive.initDefaultCommand();
+		climb.initDefaultCommand();
 		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
 				SmartDashboard.getNumber("D", 0.01));
 

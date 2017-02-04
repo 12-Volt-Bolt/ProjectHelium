@@ -1,11 +1,9 @@
 package org.usfirst.frc.team1557.robot;
 
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
-import org.usfirst.frc.team1557.robot.commands.DefenseDriveCommand;
 import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
@@ -22,9 +20,15 @@ public class OI {
 	// side.
 	public static Joystick mainJoy = new Joystick(RobotMap.mainJoyID);
 	public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
+	
 	public static JoystickButton gyroResetButton = new JoystickButton(mainJoy, RobotMap.gyroResetButtonID);
-	public static JoystickButton climbButton = new JoystickButton(mainJoy, RobotMap.climbButtonID);
-	public static JoystickButton defenseDriveButton = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonID);
+	public static JoystickButton climbUpButton = new JoystickButton(mainJoy, RobotMap.climbUpButtonID);
+	public static JoystickButton climbDownButton = new JoystickButton(mainJoy, RobotMap.climbDownButtomID);
+	public static JoystickButton defenseDriveButtonOne = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonOneID);
+	public static JoystickButton defenseDriveButtonTwo = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonTwoID);
+	
+	public static JoystickButton defenseWheelsDownButton = new JoystickButton(defenseJoy, RobotMap.defenseWheelsDownButtonID);
+	public static JoystickButton defenseWheelsUpButton = new JoystickButton(defenseJoy, RobotMap.defenseWheelsUpButtonID);
 	
 	
 	// defenseJoy is a normal joystick for when we lower a wheel for defensive
@@ -58,9 +62,11 @@ public class OI {
 	
 	public void init() {
 		
-		climbButton.whileHeld(new ClimbCommand());
+		climbUpButton.whileHeld(new ClimbCommand());
 		gyroResetButton.whileHeld(new GyroResetCommand());
-		defenseDriveButton.whenPressed(new DefenseDriveCommand());
+	
+		
+	
 		
 	}
 
