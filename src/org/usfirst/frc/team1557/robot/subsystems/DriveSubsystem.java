@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -236,6 +238,8 @@ public class DriveSubsystem extends Subsystem {
 		// return out;
 	}
 
+	double speed = 0;
+
 	public void encoderTest() {
 
 		defenseRight.setProfile(0);
@@ -248,5 +252,89 @@ public class DriveSubsystem extends Subsystem {
 		defenseRight.setSetpoint(defenseRight.getSetpoint() + 1);
 		System.out.println(defenseRight.getEncPosition());
 
+	}
+
+	private double leftEncSpeed = 0;
+	private double rightEncSpeed = 0;
+
+	/**
+	 * Used to initialize the left and right encoder PIDControllers using a
+	 * custom PIDSource and custom PIDOutput
+	 * 
+	 * @param distance
+	 *            The distance to travel in inches
+	 */
+	public void initEncoderDrive(double distance) {
+		double rotations = distance / 31.42;
+		PIDController leftPID = new PIDController(0, 0, 0, 0, new PIDSource() {
+			PIDSourceType p;
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) {
+				// TODO Auto-generated method stub
+				this.p = pidSource;
+			}
+			
+			@Override
+			public double pidGet() {
+				// TODO Auto-generated method stub
+				return defenseLeft.getEncPosition();
+			}
+			
+			@Override
+			public PIDSourceType getPIDSourceType() {
+				// TODO Auto-generated method stub
+				return p;
+			}
+		}, new PIDOutput() {
+			
+			@Override
+			public void pidWrite(double output) {
+				// TODO Auto-generated method stub
+				leftEncSpeed = output;
+			}
+		});
+		
+		PIDController rightPID = new PIDController(0, 0, 0, 0, new PIDSource() {
+			PIDSourceType t;
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) {
+				// TODO Auto-generated method stub
+				t = pidSource;
+			}
+			
+			@Override
+			public double pidGet() {
+				// TODO Auto-generated method stub
+				return defenseRight.getEncPosition();
+			}
+			
+			@Override
+			public PIDSourceType getPIDSourceType() {
+				// TODO Auto-generated method stub
+				return t;
+			}
+		}, new PIDOutput() {
+			
+			@Override
+			public void pidWrite(double output) {
+				// TODO Auto-generated method stub
+				rightEncSpeed = output;
+			}
+		});
+		
+		leftPID.setSetpoint(rotations);
+		rightPID.setSetpoint(rotations);
+		leftPID.enable();
+		rightPID.enable();
+		leftPID.setAbsoluteTolerance(1/16);
+		rightPID.setAbsoluteTolerance(1/16);;
+	}
+
+	/**
+	 * Call in the execute method to constantly set the speeds of all the motors
+	 * using the left and right encoder PIDControllers
+	 */
+	public void encoderDrive() {
+	
 	}
 }
