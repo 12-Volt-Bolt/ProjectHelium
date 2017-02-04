@@ -15,6 +15,8 @@ import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1557.robot.vision.VisionBase;
 
+import autonomous.AutoChooser;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -45,6 +47,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static VisionBase vb = new VisionBase();
 	public static DefenseWheelsSubsystem defense;
+	public static AutoChooser autoChooser;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -63,6 +66,7 @@ public class Robot extends IterativeRobot {
 		drive.gyroReset();
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
+		autoChooser =  new AutoChooser();
 		
 
 		// t.start();
@@ -105,6 +109,8 @@ public class Robot extends IterativeRobot {
 		 */
 
 		// schedule the autonomous command (example)
+		autoChooser.choose();
+		
 	}
 
 	/**
