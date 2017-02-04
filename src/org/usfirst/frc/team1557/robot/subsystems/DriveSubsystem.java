@@ -170,21 +170,32 @@ public class DriveSubsystem extends Subsystem {
 		rotationPID.setAbsoluteTolerance(2);
 		// System.out.println(rotationPID.isEnabled());
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
+
 		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
 		// altJoy.getRawAxis(yAxisAlt)));
 		// double r = rotationPID.get();
-		SmartDashboard.putNumber("X", mainJoy.getRawAxis(xAxisMain));
-		SmartDashboard.putNumber("Y", mainJoy.getRawAxis(yAxisMain));
+
 		DecimalFormat m = new DecimalFormat("0.00");
 		SmartDashboard.putString("Output Values", m.format(output[0]) + ":" + m.format(output[1]));
 		double r = 0;
-		// if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
-		// r = altJoy.getRawAxis(xAxisAlt);
-		// rotationPID.setSetpoint(getGyroAngle());
-		// } else if (mainJoy.getRawButton(4)) {
-		r = rotationPID.get();
-		if (mainJoy.getRawButton(4))
+		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
+			r = altJoy.getRawAxis(xAxisAlt);
+			rotationPID.setSetpoint(getGyroAngle());
+		} else if (mainJoy.getRawButton(4)) {
+			// Rotates until the LIFT is centered to the robot using the camera.
+			r = rotationPID.get();
 			rotationPID.setSetpoint(getGyroAngle() + SmartDashboard.getNumber("X degrees off", 0));
+			// Strafes until centered
+			if ("".equals("") /* Codriver button 1 */) { // left LIFT
+
+			} else if ("".equals("") /* Codriver button 3 */) { // center LIFT
+
+			} else if ("".equals("") /* Codriver button 3 */) { // right LIFT
+
+			} else {
+				System.out.println("Your co-driver needs to press one of the buttons!");
+			}
+		}
 		SmartDashboard.putNumber("angleOff", Robot.vb.getAngleOff());
 		// }else{
 		// r = rotationPID.get();

@@ -169,16 +169,47 @@ public class VisionBase {
 							secondaryOutput.putFrame(postProcessingFrame);
 							Imgproc.findContours(and, contours, new Mat(), Imgproc.RETR_LIST,
 									Imgproc.CHAIN_APPROX_SIMPLE);
+							int largestID = 0;
+							double xs[] = new double[] { 0, 0 };
 							if (contours.size() > 0) {
-								double[] XY = findXY(contours.get(findLargestContour(contours)));
-								SmartDashboard.putNumber("X degrees off", XY[0] * degreesPerPixel);
+								largestID = findLargestContour(contours);
+								double[] XY = findXY(contours.get(largestID));
+								xs[0] = XY[0];
+
+								Imgproc.cvtColor(and, and, Imgproc.COLOR_GRAY2BGR);
 								Imgproc.drawContours(and, contours, findLargestContour(contours),
 										new Scalar(200, 100, 200));
-								Imgproc.cvtColor(and, and, Imgproc.COLOR_GRAY2BGR);
+
 								Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
+
 										new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
 								// contours.clear();
+								SmartDashboard.putNumber("Largest width",
+										Imgproc.boundingRect(contours.get(largestID)).width);
+								if (contours.size() > 1) {
+									contours.remove(largestID);
+									largestID = findLargestContour(contours);
+									SmartDashboard.putNumber("Second Largest Width",
+											Imgproc.boundingRect(contours.get(largestID)).width);
+									XY = findXY(contours.get(largestID));
+									xs[1] = XY[0];
+									Imgproc.drawContours(and, contours, findLargestContour(contours),
+											new Scalar(200, 100, 200));
+
+									Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
+											new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
+									setAngleOff(((xs[0] + xs[1]) / 2) * degreesPerPixel);
+									SmartDashboard.putNumber("X degrees off", ((xs[0] + xs[1]) / 2) * degreesPerPixel);
+									SmartDashboard.putNumber("Distance Relative", Math.abs(xs[0] - xs[1]));
+								} else {
+									setAngleOff(0);
+									SmartDashboard.putNumber("X degrees off", 0);
+								}
+							} else {
+								setAngleOff(0);
+								SmartDashboard.putNumber("X degrees off", 0);
 							}
+
 							outputStream.putFrame(and);
 							contours.clear();
 							and.release();
@@ -194,24 +225,27 @@ public class VisionBase {
 
 	}
 
-	Object lock = new Object();
 	private double angleOff = 0;
 
 	void setAngleOff(double newAngle) {
-		synchronized (lock) {
+		synchronized (this) {
 			this.angleOff = newAngle;
 		}
 	}
 
 	public double getAngleOff() {
 		double d;
-		synchronized (lock) {
+		synchronized (this) {
 			d = angleOff;
 		}
 		return d;
 
 	}
 
+	/**
+	 * @param m
+	 * @return The id of the largest contour
+	 */
 	int findLargestContour(ArrayList<MatOfPoint> m) {
 		double largestArea = 0;
 		int id = 0;
