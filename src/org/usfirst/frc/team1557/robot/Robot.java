@@ -31,6 +31,7 @@ public class Robot extends IterativeRobot {
 	public static ClimbSubsystem climb;
 	public static OI oi;
 	public static VisionBase vb = new VisionBase();
+	public static LEDServer ledServer = new LEDServer();
 	public static DefenseWheelsSubsystem defense;
 	public static AutoChooser autoChooser;
 
@@ -51,6 +52,7 @@ public class Robot extends IterativeRobot {
 		drive.gyroReset();
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
+		ledServer.start();
 		autoChooser = new AutoChooser();
 	}
 
@@ -107,6 +109,7 @@ public class Robot extends IterativeRobot {
 		climb.initDefaultCommand();
 		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
 				SmartDashboard.getNumber("D", 0.01));
+		ledServer.sendData("Let's hope this works!");
 
 	}
 

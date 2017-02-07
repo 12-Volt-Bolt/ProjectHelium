@@ -28,11 +28,12 @@ public class CameraCorrectAngleCommand extends Command {
 	}
 
 	protected void initialize() {
-		Robot.drive.turnOnlyInit(Robot.vb.getAngleOff());
+		Robot.drive.turnOnlyInit(Robot.drive.getGyroAngle() +Robot.vb.getAngleOff());
 
 	}
 
 	protected void execute() {
+		Robot.drive.autonomousTurnPID.setSetpoint(Robot.drive.getGyroAngle() + Robot.vb.getAngleOff());
 		Robot.drive.turnOnlyDrive(isDefenseDrive);
 	}
 

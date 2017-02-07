@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class CenterAuto extends CommandGroup {
+	
+	double strafeLeft = -1.0;
+	double strafeRight = 1.0; 
 
 	public CenterAuto() {
 
@@ -25,12 +28,23 @@ public class CenterAuto extends CommandGroup {
 		// make sure that you do not A) run into other robots 2) drive into the
 		// enemy auto zone.
 		addSequential(new DistanceCommand(
-				12 * 12 /*
+				(7 * 12) + 9.25 /*
 						 * TODO: Find the distance from the wall to the center
 						 * LIFT
+						 * it is 7 ft 9 and 1/4 inches from the alliance wall to the base line
 						 */,
 				5 /* TODO: Find how long it usually takes to make the drive */,
 				1 / 16 /* TODO: Find a good tolerance */));
-
+		
+		//raise defense wheels so we can strafe
+		addSequential(new DefenseWheelsUp());
+		addSequential(new DistanceCommand(-8, 5, 1/16));
+		//strafe (in either direction but for now left), far enough to avoid the airship and other robots before moving forward past the baseline for those 5 points 
+		addSequential(new StrafeCommand(2.5, strafeLeft));
+		//put the defense wheels back down so we can use their encoders
+		addSequential(new DefenseWheelsDownCommand());
+		//move forward past baseline
+		addSequential(new DistanceCommand(11, 5, 1/16));
+		addSequential(new DefenseWheelsUp());
 	}
 }
