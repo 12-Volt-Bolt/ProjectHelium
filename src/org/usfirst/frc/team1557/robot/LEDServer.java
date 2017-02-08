@@ -42,10 +42,6 @@ class LEDServer {
 		}
 	});
 
-	public void start() {
-		serverThread.start();
-	}
-
 	private boolean connect() {
 		try {
 			_serverSocket = new ServerSocket(this.PORT);
@@ -92,8 +88,9 @@ class LEDServer {
 	}
 
 	void init(int PORT) {
-		serverThread.start();
 		this.PORT = PORT;
+		serverThread.start();
+
 	}
 
 	Object lock = new Object();

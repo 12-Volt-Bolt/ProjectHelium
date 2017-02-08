@@ -28,7 +28,7 @@ public class CenterAuto extends CommandGroup {
 		// make sure that you do not A) run into other robots 2) drive into the
 		// enemy auto zone.
 		addSequential(new DistanceCommand(
-				(7 * 12) + 9.25 /*
+				((7 * 12) + 9.25) - 5.5 /*
 						 * TODO: Find the distance from the wall to the center
 						 * LIFT
 						 * it is 7 ft 9 and 1/4 inches from the alliance wall to the base line
@@ -38,6 +38,7 @@ public class CenterAuto extends CommandGroup {
 		
 		//raise defense wheels so we can strafe
 		addSequential(new DefenseWheelsUp());
+		//move back so we can strafe
 		addSequential(new DistanceCommand(-8, 5, 1/16));
 		//strafe (in either direction but for now left), far enough to avoid the airship and other robots before moving forward past the baseline for those 5 points 
 		addSequential(new StrafeCommand(2.5, strafeLeft));
@@ -45,6 +46,7 @@ public class CenterAuto extends CommandGroup {
 		addSequential(new DefenseWheelsDownCommand());
 		//move forward past baseline
 		addSequential(new DistanceCommand(11, 5, 1/16));
+		//we'll probably want the defense wheels up when we start tele-op so
 		addSequential(new DefenseWheelsUp());
 	}
 }

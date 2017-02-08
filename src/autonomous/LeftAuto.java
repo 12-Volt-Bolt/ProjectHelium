@@ -34,7 +34,7 @@ public class LeftAuto extends CommandGroup {
     	addSequential(new TurnToAngleCommand(60, 5, 1/16, false));
     	addSequential(new DefenseWheelsDownCommand());
     	//the distance from the base line to the lift at 60 degrees is approximately 50 inches
-    	addSequential(new DistanceCommand(50, 5, 1/16));
+    	addSequential(new DistanceCommand(50 - 5.5, 5, 1/16));
     	//move back 8 inches 
     	addSequential(new DistanceCommand(-8, 5, 1/16));
     	//lift defense wheels so we can strafe

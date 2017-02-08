@@ -12,11 +12,14 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogOutput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,7 +30,7 @@ public class DriveSubsystem extends Subsystem {
 
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
-
+	private final double CONVERSION_VOLTAGE = (5d / 5120d);
 	public static CANTalon frontRight = new CANTalon(RobotMap.frontRightMotorID);
 	public static CANTalon frontLeft = new CANTalon(RobotMap.frontLeftMotorID);
 	public static CANTalon rearRight = new CANTalon(RobotMap.rearRightMotorID);
@@ -37,6 +40,7 @@ public class DriveSubsystem extends Subsystem {
 	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
 	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
 	public static PIDController rotationPID;
+	public static AnalogInput ultraSensor = new AnalogInput(3);
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
@@ -51,7 +55,6 @@ public class DriveSubsystem extends Subsystem {
 
 	// add r to right subtract r from left
 	public DriveSubsystem() {
-
 		init();
 
 	}
@@ -187,6 +190,8 @@ public class DriveSubsystem extends Subsystem {
 		// }else{
 		// r = rotationPID.get();
 		// }
+		SmartDashboard.putNumber("Voltage output", ultraSensor.getVoltage());
+		SmartDashboard.putNumber("Distance", ultraSensor.getVoltage() / CONVERSION_VOLTAGE);
 		SmartDashboard.putNumber("rot", r);
 		SmartDashboard.putNumber("Error Graph", rotationPID.getError());
 		double fr = -output[1] + r + output[0];

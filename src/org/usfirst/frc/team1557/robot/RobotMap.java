@@ -72,6 +72,6 @@ public class RobotMap {
 	 */
 	public static int defenseLeftMotorID = 5;
 	
-	public static int defenseToggleMotorLeft = 0;
-	public static int defenseToggleMotorRight = 0;
+	public static int defenseToggleMotorLeft = 16;
+	public static int defenseToggleMotorRight = 16;
 }
