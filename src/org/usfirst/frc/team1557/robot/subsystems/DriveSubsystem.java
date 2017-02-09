@@ -160,8 +160,8 @@ public class DriveSubsystem extends Subsystem {
 		rearLeft.set(leftSpeed);
 		// Natalie, the value is .68; however, as you mentioned, you should be
 		// multiplying by the fractions to avoid the small rounding error.
-		defenseRight.set(rightSpeed); // * .8 * .85);
-		defenseLeft.set(leftSpeed); // * .8 * .85);
+		defenseRight.set(rightSpeed * .8 * .85);
+		defenseLeft.set(leftSpeed * .8 * .85);
 
 	}
 

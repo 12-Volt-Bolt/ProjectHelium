@@ -18,45 +18,47 @@ public class RobotMap {
 	// public static int rangefinderModule = 1;
 
 	public static int mainJoyID = 0;
-	public static int defenseJoyID;
-
-	public static int defenseJoyYAxisID;
-	public static int defenseDriveButtonOneID;
-	public static int defenseDriveButtonTwoID;
-	public static int defenseWheelsDownButtonID;
-	public static int defenseWheelsUpButtonID;
-
-	void whichController() {
-
-		if (/* we are using the video game controller */ true) {
-			defenseJoyID = 0;
-			defenseJoyYAxisID = 5;
-			defenseDriveButtonOneID = 5;
-			defenseDriveButtonTwoID = 6;
-			
-			defenseWheelsDownButtonID = 0;
-			defenseWheelsUpButtonID = 0;
-
-		} else if (/* we are using joysticks */ true)	{
-		
-			defenseJoyID = 1;
-			defenseJoyYAxisID = 1;
-			defenseDriveButtonOneID = 1;
-			defenseDriveButtonTwoID = 2;
-			
-			defenseWheelsDownButtonID = 0;
-			defenseWheelsUpButtonID = 0;
-
-		}
-	}
+	// public static int defenseJoyID;
+	//
+	// public static int defenseJoyYAxisID;
+	public static int defenseDriveButtonOneID = 5;
+	public static int defenseDriveButtonTwoID = 6;
+	// public static int defenseWheelsDownButtonID;
+	// public static int defenseWheelsUpButtonID;
+	//
+	// {
+	// whichController();
+	// }
+	//
+	// void whichController() {
+	//
+	// if (/* we are using the video game controller */ true) {
+	// defenseJoyID = 0;
+	// defenseJoyYAxisID = 5;
+	// defenseDriveButtonOneID = 5;
+	// defenseDriveButtonTwoID = 6;
+	//
+	// defenseWheelsDownButtonID = 0;
+	// defenseWheelsUpButtonID = 0;
+	//
+	// } else if (/* we are using joysticks */ true) {
+	//
+	// defenseJoyID = 1;
+	// defenseJoyYAxisID = 1;
+	// defenseDriveButtonOneID = 1;
+	// defenseDriveButtonTwoID = 2;
+	//
+	//
+	// }
+	// }
 
 	public static int mainJoyYAxisID = 1;
 	public static int mainJoyXAxisID = 0;
 	public static int mainJoyZAxisID = 3;
 
 	public static int gyroResetButtonID = 1;
-	public static int climbUpButtonID = 2;
-	public static int climbDownButtomID = 3;
+	public static int climbUpButtonID = 3;
+	public static int climbDownButtonID = 2;
 
 	public static int frontRightMotorID = 2;
 	public static int frontLeftMotorID = 3;
@@ -71,7 +73,7 @@ public class RobotMap {
 	 * We don't actually know these IDs yet.
 	 */
 	public static int defenseLeftMotorID = 5;
-	
+
 	public static int defenseToggleMotorLeft = 16;
 	public static int defenseToggleMotorRight = 16;
 }

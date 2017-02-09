@@ -3,8 +3,12 @@ package org.usfirst.frc.team1557.robot;
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
 import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
 
+import autonomous.DefenseWheelsDownCommand;
+import autonomous.DefenseWheelsUp;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -19,18 +23,19 @@ public class OI {
 	// mainJoy is the twisty one for mecanum drive. It will be one the right
 	// side.
 	public static Joystick mainJoy = new Joystick(RobotMap.mainJoyID);
-	public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
-	
+	// public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
+
 	public static JoystickButton gyroResetButton = new JoystickButton(mainJoy, RobotMap.gyroResetButtonID);
-	public static JoystickButton climbUpButton = new JoystickButton(mainJoy, RobotMap.climbUpButtonID);
-	public static JoystickButton climbDownButton = new JoystickButton(mainJoy, RobotMap.climbDownButtomID);
-	public static JoystickButton defenseDriveButtonOne = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonOneID);
-	public static JoystickButton defenseDriveButtonTwo = new JoystickButton(defenseJoy, RobotMap.defenseDriveButtonTwoID);
-	
-	public static JoystickButton defenseWheelsDownButton = new JoystickButton(defenseJoy, RobotMap.defenseWheelsDownButtonID);
-	public static JoystickButton defenseWheelsUpButton = new JoystickButton(defenseJoy, RobotMap.defenseWheelsUpButtonID);
-	
-	
+	public static JoystickButton defenseDriveButtonOne = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonOneID);
+	public static JoystickButton defenseDriveButtonTwo = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonTwoID);
+
+	// public static JoystickButton defenseWheelsDownButton = new
+	// JoystickButton(defenseJoy,
+	// RobotMap.defenseWheelsDownButtonID);
+	// public static JoystickButton defenseWheelsUpButton = new
+	// JoystickButton(defenseJoy,
+	// RobotMap.defenseWheelsUpButtonID);
+
 	// defenseJoy is a normal joystick for when we lower a wheel for defensive
 	// driving. It will only be used for defensive driving mode. It will be on
 	// the left side.
@@ -59,15 +64,28 @@ public class OI {
 	public static double getMagnitude(Joystick joy, int xAxisID, int yAxisID) {
 		return Math.sqrt(Math.pow(joy.getRawAxis(xAxisID), 2) + Math.pow(joy.getRawAxis(yAxisID), 2));
 	}
-	
+
 	public void init() {
-		
-		climbUpButton.whileHeld(new ClimbCommand());
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return (!Robot.defense.limitSwitch.get()
+						&& (OI.defenseDriveButtonOne.get() || OI.defenseDriveButtonTwo.get()));
+			}
+		}.whenActive(new DefenseWheelsDownCommand());
+
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return ((Robot.defense.limitSwitch.get()
+						&& !(OI.defenseDriveButtonOne.get() && OI.defenseDriveButtonTwo.get())));
+			}
+		}.whenActive(new DefenseWheelsUp());
+
 		gyroResetButton.whileHeld(new GyroResetCommand());
-	
-		
-	
-		
+
 	}
 
 }
