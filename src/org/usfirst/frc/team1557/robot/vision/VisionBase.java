@@ -200,6 +200,7 @@ public class VisionBase {
 									Imgproc.drawMarker(and, new Point(XY[0] + 320 / 2, XY[1]),
 											new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
 									setAngleOff(((xs[0] + xs[1]) / 2) * degreesPerPixel);
+									setDistanceOff((xs[0] + xs[1]) / 2);
 									SmartDashboard.putNumber("X degrees off", ((xs[0] + xs[1]) / 2) * degreesPerPixel);
 									SmartDashboard.putNumber("Distance Relative", Math.abs(xs[0] - xs[1]));
 								} else {
@@ -227,19 +228,32 @@ public class VisionBase {
 	}
 
 	private double angleOff = 0;
+	private double distanceOff = 0;
+	Object angleLock = new Object();
+	Object distanceLock = new Object();
+
+	void setDistanceOff(double distance) {
+		synchronized (distanceLock) {
+			distanceOff = distance;
+		}
+	}
+
+	public double getDistanceOff() {
+		synchronized (distanceLock) {
+			return distanceOff;
+		}
+	}
 
 	void setAngleOff(double newAngle) {
-		synchronized (this) {
+		synchronized (angleLock) {
 			this.angleOff = newAngle;
 		}
 	}
 
 	public double getAngleOff() {
-		double d;
-		synchronized (this) {
-			d = angleOff;
+		synchronized (angleLock) {
+			return angleOff;
 		}
-		return d;
 
 	}
 

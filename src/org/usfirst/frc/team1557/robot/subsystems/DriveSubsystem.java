@@ -40,6 +40,7 @@ public class DriveSubsystem extends Subsystem {
 	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
 	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
 	public static PIDController rotationPID;
+	public static PIDController leftRightPID;
 	public static AnalogInput ultraSensor = new AnalogInput(3);
 
 	public void initDefaultCommand() {
@@ -70,7 +71,35 @@ public class DriveSubsystem extends Subsystem {
 						SmartDashboard.putNumber("pid out", output);
 					}
 				});
+		leftRightPID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
+				SmartDashboard.getNumber("D", 0.01), 0, new PIDSource() {
+					PIDSourceType k;
 
+					@Override
+					public void setPIDSourceType(PIDSourceType pidSource) {
+
+						k = pidSource;
+
+					}
+
+					@Override
+					public double pidGet() {
+						return Robot.vb.getDistanceOff();
+					}
+
+					@Override
+					public PIDSourceType getPIDSourceType() {
+
+						return k;
+					}
+				}, new PIDOutput() {
+
+					@Override
+					public void pidWrite(double output) {
+					}
+				});
+		leftRightPID.enable();
+		leftRightPID.setAbsoluteTolerance(10);
 		rotationPID.setContinuous();
 		rotationPID.setInputRange(-180, 180);
 		rotationPID.enable();
@@ -187,15 +216,17 @@ public class DriveSubsystem extends Subsystem {
 			r = rotationPID.get();
 			rotationPID.setSetpoint(getGyroAngle() + SmartDashboard.getNumber("X degrees off", 0));
 			// Strafes until centered
-			if ("".equals("") /* Codriver button 1 */) { // left LIFT
 
-			} else if ("".equals("") /* Codriver button 3 */) { // center LIFT
+		}
+		if (mainJoy.getPOV() == 180 /* Codriver button 1 */) { // left LIFT
+			rotationPID.setSetpoint(60);
+		} else if (mainJoy.getPOV() == 270 /* Codriver button 3 */) { // center
+																		// LIFT
+			rotationPID.setSetpoint(0);
 
-			} else if ("".equals("") /* Codriver button 3 */) { // right LIFT
-
-			} else {
-				System.out.println("Your co-driver needs to press one of the buttons!");
-			}
+		} else if (mainJoy.getPOV() == 90 /* Codriver button 3 */) { // right
+																		// LIFT
+			rotationPID.setSetpoint(-60);
 		}
 		SmartDashboard.putNumber("angleOff", Robot.vb.getAngleOff());
 		// }else{
