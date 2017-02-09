@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.text.DecimalFormat;
 
 import org.usfirst.frc.team1557.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1557.robot.vision.VisionBase;
+
+import autonomous.AutoChooser;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,28 +24,16 @@ import org.usfirst.frc.team1557.robot.vision.VisionBase;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+// TODO: Rid our world of the automagically generated TODOs
 public class Robot extends IterativeRobot {
-	// boolean running = false;
-	// Thread t = new Thread(new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// while (true)
-	// while (running) {
-	// vb.process();
-	// try {
-	// Thread.sleep(20);
-	// } catch (InterruptedException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// });
+
 	public static DriveSubsystem drive;
 	public static ClimbSubsystem climb;
 	public static OI oi;
 	public static VisionBase vb = new VisionBase();
+	public static LEDServer ledServer = new LEDServer();
+	public static DefenseWheelsSubsystem defense;
+	public static AutoChooser autoChooser;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -56,12 +47,13 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		climb = new ClimbSubsystem();
 		drive = new DriveSubsystem();
+		defense = new DefenseWheelsSubsystem();
 		oi.init();
 		drive.gyroReset();
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
-
-		// t.start();
+	//	ledServer.init(5801);
+		autoChooser = new AutoChooser();
 	}
 
 	/**
@@ -93,14 +85,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
 
-		// schedule the autonomous command (example)
+		autoChooser.choose();
+
 	}
 
 	/**
@@ -119,8 +106,10 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		// running = true;
 		drive.initDefaultCommand();
+		climb.initDefaultCommand();
 		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
 				SmartDashboard.getNumber("D", 0.01));
+	//	ledServer.sendData("Let's hope this works!");
 
 	}
 
@@ -129,10 +118,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		// System.out.println("Post Porkcessing is a go!");
 		Scheduler.getInstance().run();
-		// vb.process();
-		// vb.process();
+
 		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
 
 	}

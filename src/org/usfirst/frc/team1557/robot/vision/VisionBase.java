@@ -28,9 +28,11 @@ public class VisionBase {
 	final double FOV_of_M1011 = 61;
 	final double cameraWidth = 320;
 	final double degreesPerPixel;
+
 	{
 		degreesPerPixel = (double) (FOV_of_M1011/* degrees */ / cameraWidth /* pixels */);
 	}
+
 	// DriverStation images/video
 	AxisCamera cam;
 	/**
@@ -113,7 +115,6 @@ public class VisionBase {
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						// Acquires the current frame from the camera
