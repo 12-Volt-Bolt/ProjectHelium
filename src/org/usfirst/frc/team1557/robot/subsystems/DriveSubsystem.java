@@ -49,7 +49,7 @@ public class DriveSubsystem extends Subsystem {
 
 		// Take this, Natalie.
 		// setDefaultCommand(new MecanumDriveCommand());
-		setDefaultCommand(new FODCommand());
+		setDefaultCommand(new FODCommand("FODCommand"));
 		// setDefaultCommand(new EncoderDriveCommand());
 
 	}
@@ -198,44 +198,37 @@ public class DriveSubsystem extends Subsystem {
 			boolean rotationRelativeToJoystick) {
 		rotationPID.enable();
 		rotationPID.setAbsoluteTolerance(2);
-		// System.out.println(rotationPID.isEnabled());
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
-
-		// rotationPID.setSetpoint(OI.getDegrees(altJoy.getRawAxis(xAxisAlt),
-		// altJoy.getRawAxis(yAxisAlt)));
-		// double r = rotationPID.get();
-
-		DecimalFormat m = new DecimalFormat("0.00");
-		SmartDashboard.putString("Output Values", m.format(output[0]) + ":" + m.format(output[1]));
 		double r = 0;
-		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.09) {
+		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.1) {
 			r = altJoy.getRawAxis(xAxisAlt);
 			rotationPID.setSetpoint(getGyroAngle());
-		} else if (mainJoy.getRawButton(4)) {
-			// Rotates until the LIFT is centered to the robot using the camera.
+		} else {
+			boolean buttonPressed = true; // Checks if any of the required
+											// buttons were pressed
+			if (mainJoy.getRawButton(3))// X
+				rotationPID.setSetpoint(60); // Left
+			else if (mainJoy.getRawButton(1)) // A
+				rotationPID.setSetpoint(0); // Center
+			else if (mainJoy.getRawButton(2)) // B
+				rotationPID.setSetpoint(-60); // Right
+			else
+				// Button was not pressed if this code runs
+				buttonPressed = false;
+			// Don't change the y speed of the robot
+			if (buttonPressed && rotationPID.getError() <= 1) {
+				if (!leftRightPID.isEnabled())
+					leftRightPID.enable();
+				leftRightPID.setSetpoint(0);
+				// Limit the driver to only y movement. Now relative to the
+				// robot, not the field.
+				output[1] = mainJoy.getRawAxis(yAxisMain);
+			} else
+				leftRightPID.disable();
 			r = rotationPID.get();
-			rotationPID.setSetpoint(getGyroAngle() + SmartDashboard.getNumber("X degrees off", 0));
-			// Strafes until centered
-
 		}
-		if (mainJoy.getPOV() == 180 /* Codriver button 1 */) { // left LIFT
-			rotationPID.setSetpoint(60);
-		} else if (mainJoy.getPOV() == 270 /* Codriver button 3 */) { // center
-																		// LIFT
-			rotationPID.setSetpoint(0);
-
-		} else if (mainJoy.getPOV() == 90 /* Codriver button 3 */) { // right
-																		// LIFT
-			rotationPID.setSetpoint(-60);
-		}
-		SmartDashboard.putNumber("angleOff", Robot.vb.getAngleOff());
-		// }else{
-		// r = rotationPID.get();
-		// }
 		SmartDashboard.putNumber("Voltage output", ultraSensor.getVoltage());
 		SmartDashboard.putNumber("Distance", ultraSensor.getVoltage() / CONVERSION_VOLTAGE);
-		SmartDashboard.putNumber("rot", r);
-		SmartDashboard.putNumber("Error Graph", rotationPID.getError());
 		double fr = -output[1] + r + output[0];
 		double fl = -output[1] - r - output[0];
 		double rl = -output[1] - r + output[0];

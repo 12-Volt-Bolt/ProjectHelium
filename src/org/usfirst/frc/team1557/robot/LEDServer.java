@@ -62,7 +62,6 @@ class LEDServer {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (getData() == null || getData().length() <= 0) {

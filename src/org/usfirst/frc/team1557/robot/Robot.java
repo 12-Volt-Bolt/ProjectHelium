@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.text.DecimalFormat;
 
+import org.usfirst.frc.team1557.robot.commands.FODCommand;
 import org.usfirst.frc.team1557.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
@@ -119,7 +120,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-
+		if (OI.mainJoy.getRawButton(4) == false) {
+			if (drive.getCurrentCommand().getName() != "FODDrive") {
+				drive.getCurrentCommand().cancel();
+				new FODCommand("FODCommand").start();
+			}
+		}
 		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
 
 	}

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1557.robot;
 
+import org.usfirst.frc.team1557.robot.commands.AlignToLoadCommand;
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
 import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
 
@@ -85,7 +86,7 @@ public class OI {
 		}.whenActive(new DefenseWheelsUp());
 
 		gyroResetButton.whileHeld(new GyroResetCommand());
-
+		new JoystickButton(mainJoy, 4).whenPressed(new AlignToLoadCommand("AlignCommand"));
 	}
 
 }
