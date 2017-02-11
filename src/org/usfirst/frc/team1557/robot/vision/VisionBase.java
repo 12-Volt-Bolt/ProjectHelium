@@ -139,7 +139,7 @@ public class VisionBase {
 						 * range was 70, 120, 120 to 100, 255, 255
 						 * 
 						 */
-						if (true) {
+						if (!OI.mainJoy.getRawButton(8)) { // TODO: ID THIS
 							cam.setBrightness(20);
 							cam.setWhiteBalanceHoldCurrent();
 							cam.setExposureHoldCurrent();
@@ -218,6 +218,9 @@ public class VisionBase {
 							copy.release();
 							postProcessingFrame.release();
 							currentPureFrame.release();
+
+						} else {
+							// TODO:DO CAMERA STUFF
 
 						}
 					}
@@ -302,4 +305,7 @@ public class VisionBase {
 		process = false;
 	}
 
+	void doVision(double heightToWidth) {
+
+	}
 }

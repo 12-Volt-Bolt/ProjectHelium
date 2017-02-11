@@ -24,9 +24,9 @@ public class ClimbCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (OI.mainJoy.getRawAxis(RobotMap.climbUpButtonID) >= .3) {
+		if (OI.mainJoy.getRawAxis(RobotMap.rightTriggerAxisID) >= .3) {
 			Robot.climb.climbUp();
-		} else if (OI.mainJoy.getRawAxis(RobotMap.climbDownButtonID) >= .3) {
+		} else if (OI.mainJoy.getRawAxis(RobotMap.leftTriggerAxisID) >= .3) {
 			Robot.climb.climbDown();
 		} else {
 			Robot.climb.stopClimb();

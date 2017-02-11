@@ -2,7 +2,6 @@ package org.usfirst.frc.team1557.robot;
 
 import org.usfirst.frc.team1557.robot.commands.AlignToLoadCommand;
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
-import org.usfirst.frc.team1557.robot.commands.GyroResetCommand;
 
 import autonomous.DefenseWheelsDownCommand;
 import autonomous.DefenseWheelsUp;
@@ -25,10 +24,8 @@ public class OI {
 	// side.
 	public static Joystick mainJoy = new Joystick(RobotMap.mainJoyID);
 	// public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
-
-	public static JoystickButton gyroResetButton = new JoystickButton(mainJoy, RobotMap.gyroResetButtonID);
-	public static JoystickButton defenseDriveButtonOne = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonOneID);
-	public static JoystickButton defenseDriveButtonTwo = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonTwoID);
+//	public static JoystickButton defenseDriveButtonOne = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonOneID);
+//	public static JoystickButton defenseDriveButtonTwo = new JoystickButton(mainJoy, RobotMap.defenseDriveButtonTwoID);
 
 	// public static JoystickButton defenseWheelsDownButton = new
 	// JoystickButton(defenseJoy,
@@ -72,7 +69,7 @@ public class OI {
 			@Override
 			public boolean get() {
 				return (!Robot.defense.limitSwitch.get()
-						&& (OI.defenseDriveButtonOne.get() || OI.defenseDriveButtonTwo.get()));
+						&& (OI.mainJoy.getRawButton(RobotMap.leftBumperID) || OI.mainJoy.getRawButton(RobotMap.rightBumperID)));
 			}
 		}.whenActive(new DefenseWheelsDownCommand());
 
@@ -81,12 +78,10 @@ public class OI {
 			@Override
 			public boolean get() {
 				return ((Robot.defense.limitSwitch.get()
-						&& !(OI.defenseDriveButtonOne.get() && OI.defenseDriveButtonTwo.get())));
+						&& !(OI.mainJoy.getRawButton(RobotMap.leftBumperID) && OI.mainJoy.getRawButton(RobotMap.rightBumperID))));
 			}
 		}.whenActive(new DefenseWheelsUp());
-
-		gyroResetButton.whileHeld(new GyroResetCommand());
-		new JoystickButton(mainJoy, 4).whenPressed(new AlignToLoadCommand("AlignCommand"));
+		new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new AlignToLoadCommand("AlignCommand"));
 	}
 
 }

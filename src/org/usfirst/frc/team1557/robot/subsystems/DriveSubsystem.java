@@ -2,6 +2,9 @@ package org.usfirst.frc.team1557.robot.subsystems;
 
 import java.text.DecimalFormat;
 
+import org.usfirst.frc.team1557.robot.BNO055;
+import org.usfirst.frc.team1557.robot.BNO055.opmode_t;
+import org.usfirst.frc.team1557.robot.BNO055.vector_type_t;
 import org.usfirst.frc.team1557.robot.OI;
 import org.usfirst.frc.team1557.robot.Robot;
 import org.usfirst.frc.team1557.robot.RobotMap;
@@ -14,6 +17,7 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogOutput;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -35,12 +39,13 @@ public class DriveSubsystem extends Subsystem {
 	public static CANTalon frontLeft = new CANTalon(RobotMap.frontLeftMotorID);
 	public static CANTalon rearRight = new CANTalon(RobotMap.rearRightMotorID);
 	public static CANTalon rearLeft = new CANTalon(RobotMap.rearLeftMotorID);
-	private static ADXRS450_Gyro gyro;
+
 	public static CANTalon driveChange = new CANTalon(0);
+
 	public static CANTalon defenseRight = new CANTalon(RobotMap.defenseRightMotorID);
 	public static CANTalon defenseLeft = new CANTalon(RobotMap.defenseLeftMotorID);
 	public static PIDController rotationPID;
-	public static PIDController leftRightPID;
+	public static PIDController xPlanePID;
 	public static AnalogInput ultraSensor = new AnalogInput(3);
 
 	public void initDefaultCommand() {
@@ -61,19 +66,19 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	private void init() {
-		gyro = new ADXRS450_Gyro();
-		gyro.calibrate();
+
+		// gyro.calibrate();
 		rotationPID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
-				SmartDashboard.getNumber("D", 0.01), 0, gyro, new PIDOutput() {
+				SmartDashboard.getNumber("D", 0.01), 0, Robot.gyro, new PIDOutput() {
 
 					@Override
 					public void pidWrite(double output) {
 						SmartDashboard.putNumber("pid out", output);
 					}
 				});
-		leftRightPID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
+		xPlanePID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
 				SmartDashboard.getNumber("D", 0.01), 0, new PIDSource() {
-					PIDSourceType k;
+					PIDSourceType k = PIDSourceType.kDisplacement;
 
 					@Override
 					public void setPIDSourceType(PIDSourceType pidSource) {
@@ -84,7 +89,7 @@ public class DriveSubsystem extends Subsystem {
 
 					@Override
 					public double pidGet() {
-						return Robot.vb.getDistanceOff();
+						return /* Robot.vb.getDistanceOff() */ 0;
 					}
 
 					@Override
@@ -98,23 +103,16 @@ public class DriveSubsystem extends Subsystem {
 					public void pidWrite(double output) {
 					}
 				});
-		leftRightPID.enable();
-		leftRightPID.setAbsoluteTolerance(10);
+		xPlanePID.enable();
+		xPlanePID.setAbsoluteTolerance(10);
 		rotationPID.setContinuous();
-		rotationPID.setInputRange(-180, 180);
 		rotationPID.enable();
 		rotationPID.setAbsoluteTolerance(6);
 	}
 
-	public void gyroReset() {
-		rotationPID.reset();
-		gyro.reset();
-		rotationPID.setSetpoint(getGyroAngle());
-	}
-
 	public static double getGyroAngle() {
 
-		double gyroAngle = gyro.getAngle();
+		double gyroAngle = Robot.gyro.pidGet();
 
 		if (Math.abs(gyroAngle) > 360) {
 			gyroAngle = gyroAngle % 360;
@@ -175,8 +173,8 @@ public class DriveSubsystem extends Subsystem {
 		fl = fl * (-1);
 
 		frontRight.set(-fr);
-		rearRight.set(-rr / 2);
-		rearLeft.set(-rl / 2);
+		rearRight.set(-rr);
+		rearLeft.set(-rl);
 		frontLeft.set(-fl);
 
 	}
@@ -206,25 +204,43 @@ public class DriveSubsystem extends Subsystem {
 		} else {
 			boolean buttonPressed = true; // Checks if any of the required
 											// buttons were pressed
-			if (mainJoy.getRawButton(3))// X
+			if (mainJoy.getRawButton(RobotMap.xButtonID))// X
 				rotationPID.setSetpoint(60); // Left
-			else if (mainJoy.getRawButton(1)) // A
+			else if (mainJoy.getRawButton(RobotMap.aButtonID)) // A
 				rotationPID.setSetpoint(0); // Center
-			else if (mainJoy.getRawButton(2)) // B
+			else if (mainJoy.getRawButton(RobotMap.bButtonID)) // B
 				rotationPID.setSetpoint(-60); // Right
 			else
 				// Button was not pressed if this code runs
 				buttonPressed = false;
 			// Don't change the y speed of the robot
-			if (buttonPressed && rotationPID.getError() <= 1) {
-				if (!leftRightPID.isEnabled())
-					leftRightPID.enable();
-				leftRightPID.setSetpoint(0);
-				// Limit the driver to only y movement. Now relative to the
-				// robot, not the field.
-				output[1] = mainJoy.getRawAxis(yAxisMain);
-			} else
-				leftRightPID.disable();
+			if (buttonPressed) {
+				if (Math.abs(rotationPID.getError()) <= 1) {
+					if (!xPlanePID.isEnabled()) {
+						xPlanePID.enable();
+					}
+					xPlanePID.setSetpoint(/* Robot.vb.getDistanceOff() */0);
+					// Limit the driver to only y movement. Now relative to the
+					// robot, not the field.
+					// TODO: Set the speeds of the x according to the
+					// leftRightPID
+					output[0] = xPlanePID.get();
+					// Don't change the y
+
+					output[1] = -mainJoy.getRawAxis(yAxisMain);
+				} else {
+					// If the button was pressed but we aren't within the
+					// deadzone, 0 out the y speed. Also 0 out the x.
+					if (xPlanePID.isEnabled()) {
+						xPlanePID.disable();
+					}
+					output[1] = 0;
+					output[0] = 0;
+				}
+			} else {
+				// If the button was not pressed,
+
+			}
 			r = rotationPID.get();
 		}
 		SmartDashboard.putNumber("Voltage output", ultraSensor.getVoltage());
@@ -245,10 +261,9 @@ public class DriveSubsystem extends Subsystem {
 		rl = rl / highestValue;
 		rr = rr / highestValue;
 
-		fl = -fl;
-		frontRight.set(-fr);
-		rearRight.set(-rr / 2);
-		rearLeft.set(-rl / 2);
+		frontRight.set(fr);
+		rearRight.set(rr);
+		rearLeft.set(-rl);
 		frontLeft.set(-fl);
 	}
 
@@ -309,7 +324,7 @@ public class DriveSubsystem extends Subsystem {
 		double rotations = distance / 31.42; // 31.42 is the cirvumference of
 												// the center tires.
 		leftPID = new PIDController(0, 0, 0, 0, new PIDSource() {
-			PIDSourceType p;
+			PIDSourceType p = PIDSourceType.kDisplacement;
 
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) {
@@ -334,7 +349,7 @@ public class DriveSubsystem extends Subsystem {
 		});
 
 		rightPID = new PIDController(0, 0, 0, 0, new PIDSource() {
-			PIDSourceType t;
+			PIDSourceType t = PIDSourceType.kDisplacement;
 
 			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) {
@@ -404,7 +419,7 @@ public class DriveSubsystem extends Subsystem {
 	 *            The rotation to turn to relative to the field.
 	 */
 	public void turnOnlyInit(double setpoint) {
-		autonomousTurnPID = new PIDController(0, 0, 0, gyro, new PIDOutput() {
+		autonomousTurnPID = new PIDController(0, 0, 0, Robot.gyro, new PIDOutput() {
 
 			@Override
 			public void pidWrite(double output) {

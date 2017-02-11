@@ -17,12 +17,11 @@ public class RobotMap {
 	// public static int rangefinderPort = 1;
 	// public static int rangefinderModule = 1;
 
-	public static int mainJoyID = 0;
 	// public static int defenseJoyID;
 	//
 	// public static int defenseJoyYAxisID;
-	public static int defenseDriveButtonOneID = 5;
-	public static int defenseDriveButtonTwoID = 6;
+//	public static int defenseDriveButtonOneID = 5;
+//	public static int defenseDriveButtonTwoID = 6;
 	// public static int defenseWheelsDownButtonID;
 	// public static int defenseWheelsUpButtonID;
 	//
@@ -51,19 +50,31 @@ public class RobotMap {
 	//
 	// }
 	// }
+	
+	public static int mainJoyZAxisID = 15;
+	
+	public static int mainJoyID = 0;
 
-	public static int mainJoyYAxisID = 1;
-	public static int mainJoyXAxisID = 0;
-	public static int mainJoyZAxisID = 3;
+	public static int leftXAxisID = 0;
+	public static int leftYAxisID = 1;
+	
+	public static int leftTriggerAxisID = 2; //climb down
+	public static int rightTriggerAxisID = 3; //climb up
+	
+	public static int rightXAxisID = 4;
+	public static int rightYAxisID = 5;
 
-	public static int gyroResetButtonID = 1;
-	public static int climbUpButtonID = 3;
-	public static int climbDownButtonID = 2;
+	public static int aButtonID = 1;
+	public static int bButtonID = 2; //line up with right gear scoring
+	public static int xButtonID = 3; //line up with left gear scoring
+	public static int yButtonID = 4;
+	public static int leftBumperID = 5;  //hold for defense wheels
+	public static int rightBumperID = 6; //hold for defense wheels
 
-	public static int frontRightMotorID = 2;
-	public static int frontLeftMotorID = 3;
-	public static int rearRightMotorID = 1;
-	public static int rearLeftMotorID = 0;
+	public static int frontRightMotorID = 12;
+	public static int frontLeftMotorID = 13;
+	public static int rearRightMotorID = 11;
+	public static int rearLeftMotorID = 10;
 
 	/**
 	 * We don't actually know these IDs yet.
@@ -76,4 +87,7 @@ public class RobotMap {
 
 	public static int defenseToggleMotorLeft = 16;
 	public static int defenseToggleMotorRight = 16;
+	
+	public static int climbMotorRightID = 15;
+	public static int climbMotorLeftID = 15;
 }

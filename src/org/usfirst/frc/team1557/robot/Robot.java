@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team1557.robot;
 
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -9,7 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
+import org.usfirst.frc.team1557.robot.BNO055.opmode_t;
+import org.usfirst.frc.team1557.robot.BNO055.vector_type_t;
 import org.usfirst.frc.team1557.robot.commands.FODCommand;
 import org.usfirst.frc.team1557.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
@@ -31,10 +35,11 @@ public class Robot extends IterativeRobot {
 	public static DriveSubsystem drive;
 	public static ClimbSubsystem climb;
 	public static OI oi;
-	public static VisionBase vb = new VisionBase();
-	public static LEDServer ledServer = new LEDServer();
+	// public static VisionBase vb = new VisionBase();
+	// public static LEDServer ledServer = new LEDServer();
 	public static DefenseWheelsSubsystem defense;
 	public static AutoChooser autoChooser;
+	public static BNO055 gyro;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,6 +47,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
+				(byte) 0x28);
 		SmartDashboard.putNumber("P", 0.04);
 		SmartDashboard.putNumber("I", 0.00001);
 		SmartDashboard.putNumber("D", 0.0);
@@ -50,11 +57,12 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		defense = new DefenseWheelsSubsystem();
 		oi.init();
-		drive.gyroReset();
-		vb.start("MainCamera", "10.15.57.90");
-		vb.startProcess();
+		// vb.start("MainCamera", "10.15.57.90");
+		// vb.startProcess();
+		gyro.setOffsetValues();
 		// ledServer.init(5801);
 		autoChooser = new AutoChooser();
+
 	}
 
 	/**
@@ -64,13 +72,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		drive.gyroReset();
 		// running = false;
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		DriveSubsystem.rotationPID.disable();
 	}
 
 	/**
@@ -86,7 +94,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-
+		gyro.setOffsetValues();
 		autoChooser.choose();
 
 	}
@@ -106,6 +114,7 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		// running = true;
+		gyro.setOffsetValues(); // TODO: Remove this at competition!
 		drive.initDefaultCommand();
 		climb.initDefaultCommand();
 		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
@@ -120,13 +129,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		if (OI.mainJoy.getRawButton(4) == false) {
-			if (drive.getCurrentCommand().getName() != "FODDrive") {
-				drive.getCurrentCommand().cancel();
-				new FODCommand("FODCommand").start();
+		if (OI.mainJoy.getRawButton(RobotMap.yButtonID) == false) {
+			if (drive.getCurrentCommand().getName() != "FODDrive" && drive.getCurrentCommand() != null) {
+				new FODCommand("FODDrive").start();
 			}
 		}
-		SmartDashboard.putString("Gyro Angle in Degress", new DecimalFormat("0.00").format(drive.getGyroAngle()));
+		SmartDashboard.putString("BNO055", drive.getGyroAngle() + "");
+		DecimalFormat d = new DecimalFormat("0.00");
+		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
+				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
+		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
 
 	}
 

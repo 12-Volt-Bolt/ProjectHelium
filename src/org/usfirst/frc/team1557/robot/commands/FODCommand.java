@@ -17,6 +17,11 @@ public class FODCommand extends Command {
 	}
 
 	@Override
+	protected void initialize() {
+		Robot.drive.rotationPID.enable();
+	}
+
+	@Override
 	protected boolean isFinished() {
 
 		return false;
@@ -25,12 +30,12 @@ public class FODCommand extends Command {
 	protected void execute() {
 
 		if (!Robot.defense.limitSwitch.get()) {
-			Robot.drive.defenseDrive(OI.mainJoy.getRawAxis(RobotMap.mainJoyYAxisID),
-					OI.mainJoy.getRawAxis(RobotMap.mainJoyYAxisID));
+			Robot.drive.defenseDrive(OI.mainJoy.getRawAxis(RobotMap.leftYAxisID),
+					OI.mainJoy.getRawAxis(RobotMap.leftYAxisID));
 			OI.mainJoy.setRumble(RumbleType.kLeftRumble, 0.25);
 			OI.mainJoy.setRumble(RumbleType.kRightRumble, 0.25);
 		} else {
-			drive.fodDrive(OI.mainJoy, mainJoyXAxisID, mainJoyYAxisID, OI.mainJoy, 4, 5,
+			drive.fodDrive(OI.mainJoy, leftXAxisID, leftYAxisID, OI.mainJoy, 4, 5,
 					SmartDashboard.getBoolean("use borkened thing", false));
 		}
 		// TODO: Get rid of magic numbers.
