@@ -103,76 +103,49 @@ public class BNO055 implements PIDSource {
 
 		/* PAGE0 REGISTER DEFINITION START */
 		BNO055_CHIP_ID_ADDR(0x00), BNO055_ACCEL_REV_ID_ADDR(0x01), BNO055_MAG_REV_ID_ADDR(
-				0x02), BNO055_GYRO_REV_ID_ADDR(0x03), BNO055_SW_REV_ID_LSB_ADDR(0x04), BNO055_SW_REV_ID_MSB_ADDR(
-						0x05), BNO055_BL_REV_ID_ADDR(0X06),
+				0x02), BNO055_GYRO_REV_ID_ADDR(0x03), BNO055_SW_REV_ID_LSB_ADDR(
+						0x04), BNO055_SW_REV_ID_MSB_ADDR(0x05), BNO055_BL_REV_ID_ADDR(0X06),
 
 		/* Accel data register */
-						BNO055_ACCEL_DATA_X_LSB_ADDR(0X08), BNO055_ACCEL_DATA_X_MSB_ADDR(
-								0X09), BNO055_ACCEL_DATA_Y_LSB_ADDR(0X0A), BNO055_ACCEL_DATA_Y_MSB_ADDR(
-										0X0B), BNO055_ACCEL_DATA_Z_LSB_ADDR(0X0C), BNO055_ACCEL_DATA_Z_MSB_ADDR(0X0D),
+		BNO055_ACCEL_DATA_X_LSB_ADDR(0X08), BNO055_ACCEL_DATA_X_MSB_ADDR(0X09), BNO055_ACCEL_DATA_Y_LSB_ADDR(
+				0X0A), BNO055_ACCEL_DATA_Y_MSB_ADDR(
+						0X0B), BNO055_ACCEL_DATA_Z_LSB_ADDR(0X0C), BNO055_ACCEL_DATA_Z_MSB_ADDR(0X0D),
 
 		/* Mag data register */
-										BNO055_MAG_DATA_X_LSB_ADDR(0X0E), BNO055_MAG_DATA_X_MSB_ADDR(
-												0X0F), BNO055_MAG_DATA_Y_LSB_ADDR(0X10), BNO055_MAG_DATA_Y_MSB_ADDR(
-														0X11), BNO055_MAG_DATA_Z_LSB_ADDR(
-																0X12), BNO055_MAG_DATA_Z_MSB_ADDR(0X13),
+		BNO055_MAG_DATA_X_LSB_ADDR(0X0E), BNO055_MAG_DATA_X_MSB_ADDR(0X0F), BNO055_MAG_DATA_Y_LSB_ADDR(
+				0X10), BNO055_MAG_DATA_Y_MSB_ADDR(
+						0X11), BNO055_MAG_DATA_Z_LSB_ADDR(0X12), BNO055_MAG_DATA_Z_MSB_ADDR(0X13),
 
 		/* Gyro data registers */
-																BNO055_GYRO_DATA_X_LSB_ADDR(
-																		0X14), BNO055_GYRO_DATA_X_MSB_ADDR(
-																				0X15), BNO055_GYRO_DATA_Y_LSB_ADDR(
-																						0X16), BNO055_GYRO_DATA_Y_MSB_ADDR(
-																								0X17), BNO055_GYRO_DATA_Z_LSB_ADDR(
-																										0X18), BNO055_GYRO_DATA_Z_MSB_ADDR(
-																												0X19),
+		BNO055_GYRO_DATA_X_LSB_ADDR(0X14), BNO055_GYRO_DATA_X_MSB_ADDR(0X15), BNO055_GYRO_DATA_Y_LSB_ADDR(
+				0X16), BNO055_GYRO_DATA_Y_MSB_ADDR(
+						0X17), BNO055_GYRO_DATA_Z_LSB_ADDR(0X18), BNO055_GYRO_DATA_Z_MSB_ADDR(0X19),
 
 		/* Euler data registers */
-																												BNO055_EULER_H_LSB_ADDR(
-																														0X1A), BNO055_EULER_H_MSB_ADDR(
-																																0X1B), BNO055_EULER_R_LSB_ADDR(
-																																		0X1C), BNO055_EULER_R_MSB_ADDR(
-																																				0X1D), BNO055_EULER_P_LSB_ADDR(
-																																						0X1E), BNO055_EULER_P_MSB_ADDR(
-																																								0X1F),
+		BNO055_EULER_H_LSB_ADDR(0X1A), BNO055_EULER_H_MSB_ADDR(0X1B), BNO055_EULER_R_LSB_ADDR(
+				0X1C), BNO055_EULER_R_MSB_ADDR(0X1D), BNO055_EULER_P_LSB_ADDR(0X1E), BNO055_EULER_P_MSB_ADDR(0X1F),
 
 		/* Quaternion data registers */
-																																								BNO055_QUATERNION_DATA_W_LSB_ADDR(
-																																										0X20), BNO055_QUATERNION_DATA_W_MSB_ADDR(
-																																												0X21), BNO055_QUATERNION_DATA_X_LSB_ADDR(
-																																														0X22), BNO055_QUATERNION_DATA_X_MSB_ADDR(
-																																																0X23), BNO055_QUATERNION_DATA_Y_LSB_ADDR(
-																																																		0X24), BNO055_QUATERNION_DATA_Y_MSB_ADDR(
-																																																				0X25), BNO055_QUATERNION_DATA_Z_LSB_ADDR(
-																																																						0X26), BNO055_QUATERNION_DATA_Z_MSB_ADDR(
-																																																								0X27),
+		BNO055_QUATERNION_DATA_W_LSB_ADDR(0X20), BNO055_QUATERNION_DATA_W_MSB_ADDR(
+				0X21), BNO055_QUATERNION_DATA_X_LSB_ADDR(0X22), BNO055_QUATERNION_DATA_X_MSB_ADDR(
+						0X23), BNO055_QUATERNION_DATA_Y_LSB_ADDR(0X24), BNO055_QUATERNION_DATA_Y_MSB_ADDR(
+								0X25), BNO055_QUATERNION_DATA_Z_LSB_ADDR(0X26), BNO055_QUATERNION_DATA_Z_MSB_ADDR(0X27),
 
 		/* Linear acceleration data registers */
-																																																								BNO055_LINEAR_ACCEL_DATA_X_LSB_ADDR(
-																																																										0X28), BNO055_LINEAR_ACCEL_DATA_X_MSB_ADDR(
-																																																												0X29), BNO055_LINEAR_ACCEL_DATA_Y_LSB_ADDR(
-																																																														0X2A), BNO055_LINEAR_ACCEL_DATA_Y_MSB_ADDR(
-																																																																0X2B), BNO055_LINEAR_ACCEL_DATA_Z_LSB_ADDR(
-																																																																		0X2C), BNO055_LINEAR_ACCEL_DATA_Z_MSB_ADDR(
-																																																																				0X2D),
+		BNO055_LINEAR_ACCEL_DATA_X_LSB_ADDR(0X28), BNO055_LINEAR_ACCEL_DATA_X_MSB_ADDR(
+				0X29), BNO055_LINEAR_ACCEL_DATA_Y_LSB_ADDR(0X2A), BNO055_LINEAR_ACCEL_DATA_Y_MSB_ADDR(
+						0X2B), BNO055_LINEAR_ACCEL_DATA_Z_LSB_ADDR(0X2C), BNO055_LINEAR_ACCEL_DATA_Z_MSB_ADDR(0X2D),
 
 		/* Gravity data registers */
-																																																																				BNO055_GRAVITY_DATA_X_LSB_ADDR(
-																																																																						0X2E), BNO055_GRAVITY_DATA_X_MSB_ADDR(
-																																																																								0X2F), BNO055_GRAVITY_DATA_Y_LSB_ADDR(
-																																																																										0X30), BNO055_GRAVITY_DATA_Y_MSB_ADDR(
-																																																																												0X31), BNO055_GRAVITY_DATA_Z_LSB_ADDR(
-																																																																														0X32), BNO055_GRAVITY_DATA_Z_MSB_ADDR(
-																																																																																0X33),
+		BNO055_GRAVITY_DATA_X_LSB_ADDR(0X2E), BNO055_GRAVITY_DATA_X_MSB_ADDR(0X2F), BNO055_GRAVITY_DATA_Y_LSB_ADDR(
+				0X30), BNO055_GRAVITY_DATA_Y_MSB_ADDR(
+						0X31), BNO055_GRAVITY_DATA_Z_LSB_ADDR(0X32), BNO055_GRAVITY_DATA_Z_MSB_ADDR(0X33),
 
 		/* Temperature data register */
-																																																																																BNO055_TEMP_ADDR(
-																																																																																		0X34),
+		BNO055_TEMP_ADDR(0X34),
 
 		/* Status registers */
-																																																																																		BNO055_CALIB_STAT_ADDR(
-																																																																																				0X35), BNO055_SELFTEST_RESULT_ADDR(
-																																																																																						0X36), BNO055_INTR_STAT_ADDR(
-																																																																																								0X37),
+		BNO055_CALIB_STAT_ADDR(0X35), BNO055_SELFTEST_RESULT_ADDR(0X36), BNO055_INTR_STAT_ADDR(0X37),
 
 		BNO055_SYS_CLK_STAT_ADDR(0X38), BNO055_SYS_STAT_ADDR(0X39), BNO055_SYS_ERR_ADDR(0X3A),
 
@@ -202,38 +175,19 @@ public class BNO055 implements PIDSource {
 																								0X54),
 
 		/* Accelerometer Offset registers */
-																								ACCEL_OFFSET_X_LSB_ADDR(
-																										0X55), ACCEL_OFFSET_X_MSB_ADDR(
-																												0X56), ACCEL_OFFSET_Y_LSB_ADDR(
-																														0X57), ACCEL_OFFSET_Y_MSB_ADDR(
-																																0X58), ACCEL_OFFSET_Z_LSB_ADDR(
-																																		0X59), ACCEL_OFFSET_Z_MSB_ADDR(
-																																				0X5A),
+		ACCEL_OFFSET_X_LSB_ADDR(0X55), ACCEL_OFFSET_X_MSB_ADDR(0X56), ACCEL_OFFSET_Y_LSB_ADDR(
+				0X57), ACCEL_OFFSET_Y_MSB_ADDR(0X58), ACCEL_OFFSET_Z_LSB_ADDR(0X59), ACCEL_OFFSET_Z_MSB_ADDR(0X5A),
 
 		/* Magnetometer Offset registers */
-																																				MAG_OFFSET_X_LSB_ADDR(
-																																						0X5B), MAG_OFFSET_X_MSB_ADDR(
-																																								0X5C), MAG_OFFSET_Y_LSB_ADDR(
-																																										0X5D), MAG_OFFSET_Y_MSB_ADDR(
-																																												0X5E), MAG_OFFSET_Z_LSB_ADDR(
-																																														0X5F), MAG_OFFSET_Z_MSB_ADDR(
-																																																0X60),
+		MAG_OFFSET_X_LSB_ADDR(0X5B), MAG_OFFSET_X_MSB_ADDR(0X5C), MAG_OFFSET_Y_LSB_ADDR(0X5D), MAG_OFFSET_Y_MSB_ADDR(
+				0X5E), MAG_OFFSET_Z_LSB_ADDR(0X5F), MAG_OFFSET_Z_MSB_ADDR(0X60),
 
 		/* Gyroscope Offset register s */
-																																																GYRO_OFFSET_X_LSB_ADDR(
-																																																		0X61), GYRO_OFFSET_X_MSB_ADDR(
-																																																				0X62), GYRO_OFFSET_Y_LSB_ADDR(
-																																																						0X63), GYRO_OFFSET_Y_MSB_ADDR(
-																																																								0X64), GYRO_OFFSET_Z_LSB_ADDR(
-																																																										0X65), GYRO_OFFSET_Z_MSB_ADDR(
-																																																												0X66),
+		GYRO_OFFSET_X_LSB_ADDR(0X61), GYRO_OFFSET_X_MSB_ADDR(0X62), GYRO_OFFSET_Y_LSB_ADDR(
+				0X63), GYRO_OFFSET_Y_MSB_ADDR(0X64), GYRO_OFFSET_Z_LSB_ADDR(0X65), GYRO_OFFSET_Z_MSB_ADDR(0X66),
 
 		/* Radius registers */
-																																																												ACCEL_RADIUS_LSB_ADDR(
-																																																														0X67), ACCEL_RADIUS_MSB_ADDR(
-																																																																0X68), MAG_RADIUS_LSB_ADDR(
-																																																																		0X69), MAG_RADIUS_MSB_ADDR(
-																																																																				0X6A);
+		ACCEL_RADIUS_LSB_ADDR(0X67), ACCEL_RADIUS_MSB_ADDR(0X68), MAG_RADIUS_LSB_ADDR(0X69), MAG_RADIUS_MSB_ADDR(0X6A);
 
 		private final int val;
 
@@ -263,10 +217,10 @@ public class BNO055 implements PIDSource {
 	public enum opmode_t {
 		/* Operation mode settings */
 		OPERATION_MODE_CONFIG(0X00), OPERATION_MODE_ACCONLY(0X01), OPERATION_MODE_MAGONLY(0X02), OPERATION_MODE_GYRONLY(
-				0X03), OPERATION_MODE_ACCMAG(0X04), OPERATION_MODE_ACCGYRO(0X05), OPERATION_MODE_MAGGYRO(
-						0X06), OPERATION_MODE_AMG(0X07), OPERATION_MODE_IMUPLUS(0X08), OPERATION_MODE_COMPASS(
-								0X09), OPERATION_MODE_M4G(0X0A), OPERATION_MODE_NDOF_FMC_OFF(0X0B), OPERATION_MODE_NDOF(
-										0X0C);
+				0X03), OPERATION_MODE_ACCMAG(0X04), OPERATION_MODE_ACCGYRO(
+						0X05), OPERATION_MODE_MAGGYRO(0X06), OPERATION_MODE_AMG(0X07), OPERATION_MODE_IMUPLUS(
+								0X08), OPERATION_MODE_COMPASS(0X09), OPERATION_MODE_M4G(
+										0X0A), OPERATION_MODE_NDOF_FMC_OFF(0X0B), OPERATION_MODE_NDOF(0X0C);
 
 		private final int val;
 

@@ -49,8 +49,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
 				(byte) 0x28);
-		SmartDashboard.putNumber("P", 0.04);
-		SmartDashboard.putNumber("I", 0.00001);
+		SmartDashboard.putNumber("P", 0.01);
+		SmartDashboard.putNumber("I", 0.00000);
 		SmartDashboard.putNumber("D", 0.0);
 		oi = new OI();
 		climb = new ClimbSubsystem();
@@ -60,6 +60,7 @@ public class Robot extends IterativeRobot {
 		// vb.start("MainCamera", "10.15.57.90");
 		// vb.startProcess();
 		gyro.setOffsetValues();
+		drive.rotationPID.setSetpoint(0);
 		// ledServer.init(5801);
 		autoChooser = new AutoChooser();
 
@@ -79,6 +80,12 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		DriveSubsystem.rotationPID.disable();
+		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
+		DecimalFormat d = new DecimalFormat("0.00");
+		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
+				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
+		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
+
 	}
 
 	/**
@@ -94,6 +101,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		drive.rotationPID.setSetpoint(0);
 		gyro.setOffsetValues();
 		autoChooser.choose();
 
@@ -114,6 +122,7 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		// running = true;
+		drive.rotationPID.setSetpoint(0);
 		gyro.setOffsetValues(); // TODO: Remove this at competition!
 		drive.initDefaultCommand();
 		climb.initDefaultCommand();
@@ -134,7 +143,7 @@ public class Robot extends IterativeRobot {
 				new FODCommand("FODDrive").start();
 			}
 		}
-		SmartDashboard.putString("BNO055", drive.getGyroAngle() + "");
+		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
 		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
 				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
@@ -149,4 +158,5 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
+
 }
