@@ -73,21 +73,15 @@ public class RobotMap {
 
 	public static int frontRightMotorID = 12;
 	public static int frontLeftMotorID = 13;
-	public static int rearRightMotorID = 11;
-	public static int rearLeftMotorID = 10;
+	public static int rearRightMotorID = 21;
+	public static int rearLeftMotorID = 11;
 
-	/**
-	 * We don't actually know these IDs yet.
-	 */
-	public static int defenseRightMotorID = 6;
-	/**
-	 * We don't actually know these IDs yet.
-	 */
-	public static int defenseLeftMotorID = 5;
-
-	public static int defenseToggleMotorLeft = 16;
-	public static int defenseToggleMotorRight = 16;
 	
-	public static int climbMotorRightID = 15;
-	public static int climbMotorLeftID = 15;
+	public static int defenseRightMotorID = 2;
+	public static int defenseLeftMotorID = 22;
+
+	public static int defenseToggleMotorLeft = 6;
+	public static int defenseToggleMotorRight = 7;
+	
+	public static int climbMotorID = 1;
 }

@@ -13,10 +13,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class ClimbSubsystem extends Subsystem {
 
-	public CANTalon climbMotorLeft = new CANTalon(RobotMap.climbMotorLeftID);
-	public CANTalon climbMotorRight = new CANTalon(RobotMap.climbMotorRightID);
+	public CANTalon climbMotor = new CANTalon(RobotMap.climbMotorLeftID);
 
-	// Put methods for controlling this subsystem
+	// Put methods for controlling this subsystem	
 	// here. Call these from Commands.
 
 	public void initDefaultCommand() {
@@ -35,18 +34,15 @@ public class ClimbSubsystem extends Subsystem {
 	 * electrical.
 	 */
 	public void climbUp() {
-		Robot.climb.climbMotorLeft.set(1.0);
-		Robot.climb.climbMotorRight.set(-1.0);
+		Robot.climb.climbMotor.set(1.0);
 	}
 
 	public void climbDown() {
-		Robot.climb.climbMotorLeft.set(-1.0);
-		Robot.climb.climbMotorRight.set(1.0);
+		Robot.climb.climbMotor.set(-1.0);
 	}
 
 	public void stopClimb() {
-		Robot.climb.climbMotorLeft.set(0);
-		Robot.climb.climbMotorRight.set(0);
+		Robot.climb.climbMotor.set(0);
 	}
 
 }
