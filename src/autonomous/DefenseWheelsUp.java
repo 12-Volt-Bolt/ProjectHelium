@@ -17,7 +17,7 @@ public class DefenseWheelsUp extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	this.setTimeout(5);
+    	this.setTimeout(3);
     }
 
     // Called repeatedly when this Command is scheduled to run

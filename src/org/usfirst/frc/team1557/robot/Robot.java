@@ -47,8 +47,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
+		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_GYRONLY, vector_type_t.VECTOR_EULER, Port.kOnboard,
 				(byte) 0x28);
+		gyro.setMode(opmode_t.OPERATION_MODE_GYRONLY);
 		SmartDashboard.putNumber("P", 0.01);
 		SmartDashboard.putNumber("I", 0.00000);
 		SmartDashboard.putNumber("D", 0.0);
@@ -85,6 +86,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
 				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
 		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
+		SmartDashboard.putString("Rev number",
+				"Gyro:" + gyro.getRevInfo().gyro_rev + "    Sys: " + gyro.getRevInfo().sw_rev);
+		SmartDashboard.putString("Calibration",
+				"Gyro: " + gyro.getCalibration().gyro + "   Sys: " + gyro.getCalibration().sys);
 
 	}
 
@@ -129,7 +134,6 @@ public class Robot extends IterativeRobot {
 		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
 				SmartDashboard.getNumber("D", 0.01));
 		// ledServer.sendData("Let's hope this works!");
-
 	}
 
 	/**
@@ -145,8 +149,8 @@ public class Robot extends IterativeRobot {
 		}
 		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
-		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
-				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
+		SmartDashboard.putString("SystemStatus", "self-test: " + gyro.getSystemStatus().self_test_result + "error: "
+				+ gyro.getSystemStatus().system_error + "status: " + gyro.getSystemStatus().system_status);
 		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
 
 	}

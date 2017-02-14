@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class ClimbSubsystem extends Subsystem {
 
-	public CANTalon climbMotor = new CANTalon(RobotMap.climbMotorLeftID);
+	public CANTalon climbMotor = new CANTalon(RobotMap.climbMotorID);
 
 	// Put methods for controlling this subsystem	
 	// here. Call these from Commands.

@@ -17,7 +17,7 @@ public class DefenseWheelsDownCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	this.setTimeout(5);
+    	this.setTimeout(3);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -27,7 +27,7 @@ public class DefenseWheelsDownCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.defense.limitSwitch.get() && isTimedOut();
+        return !Robot.defense.limitSwitch.get() && isTimedOut();
     }
 
     // Called once after isFinished returns true

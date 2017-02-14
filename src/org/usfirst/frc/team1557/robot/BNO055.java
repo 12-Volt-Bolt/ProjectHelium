@@ -300,6 +300,7 @@ public class BNO055 implements PIDSource {
 			instance = new BNO055(port, address);
 		}
 		requestedMode = mode;
+
 		requestedVectorType = vectorType;
 		return instance;
 	}
