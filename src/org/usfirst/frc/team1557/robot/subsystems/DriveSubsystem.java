@@ -76,6 +76,7 @@ public class DriveSubsystem extends Subsystem {
 						SmartDashboard.putNumber("pid out", output);
 					}
 				});
+		// P ~= 0.0001, I = ?, D = ?;
 		xPlanePID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
 				SmartDashboard.getNumber("D", 0.01), 0, new PIDSource() {
 					PIDSourceType k = PIDSourceType.kDisplacement;
@@ -214,12 +215,13 @@ public class DriveSubsystem extends Subsystem {
 				// Button was not pressed if this code runs
 				buttonPressed = false;
 			// Don't change the y speed of the robot
+			SmartDashboard.putNumber("Error", rotationPID.getError());
 			if (buttonPressed) {
 				if (Math.abs(rotationPID.getError()) <= 1) {
 					if (!xPlanePID.isEnabled()) {
 						xPlanePID.enable();
 					}
-					xPlanePID.setSetpoint(/* Robot.vb.getDistanceOff() */0);
+					xPlanePID.setSetpoint(Robot.vb.getDistanceOff());
 					// Limit the driver to only y movement. Now relative to the
 					// robot, not the field.
 					// TODO: Set the speeds of the x according to the
@@ -233,6 +235,7 @@ public class DriveSubsystem extends Subsystem {
 					// deadzone, 0 out the y speed. Also 0 out the x.
 					if (xPlanePID.isEnabled()) {
 						xPlanePID.disable();
+						xPlanePID.setSetpoint(0);
 					}
 					output[1] = 0;
 					output[0] = 0;

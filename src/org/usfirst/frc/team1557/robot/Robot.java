@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 	public static DriveSubsystem drive;
 	public static ClimbSubsystem climb;
 	public static OI oi;
-	// public static VisionBase vb = new VisionBase();
+	public static VisionBase vb = new VisionBase();
 	// public static LEDServer ledServer = new LEDServer();
 	public static DefenseWheelsSubsystem defense;
 	public static AutoChooser autoChooser;
@@ -58,8 +58,8 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		defense = new DefenseWheelsSubsystem();
 		oi.init();
-		// vb.start("MainCamera", "10.15.57.90");
-		// vb.startProcess();
+		vb.start("MainCamera", "10.15.57.90");
+		vb.startProcess();
 		gyro.setOffsetValues();
 		drive.rotationPID.setSetpoint(0);
 		// ledServer.init(5801);

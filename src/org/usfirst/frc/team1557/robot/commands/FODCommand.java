@@ -30,18 +30,23 @@ public class FODCommand extends Command {
 
 	protected void execute() {
 
-//		if (!Robot.defense.limitSwitch.get()) {
-			Robot.drive.defenseDrive(OI.mainJoy.getRawAxis(RobotMap.leftYAxisID),
-					OI.mainJoy.getRawAxis(RobotMap.rightYAxisID));
-	             OI.mainJoy.setRumble(GenericHID.RumbleType.kLeftRumble, 0.25);
-	             OI.mainJoy.setRumble(GenericHID.RumbleType.kRightRumble, 0.25);
-			
-			//	OI.mainJoy.setRumble(RumbleType.kLeftRumble, 0.25);
-		//	OI.mainJoy.setRumble(RumbleType.kRightRumble, 0.25);
-	//	} else {
-	//		drive.fodDrive(OI.mainJoy, leftXAxisID, leftYAxisID, OI.mainJoy, 4, 5,
-	//				SmartDashboard.getBoolean("use borkened thing", false));
-	//	}
+		// if (!Robot.defense.limitSwitch.get()) {
+		// Robot.drive.defenseDrive(OI.mainJoy.getRawAxis(RobotMap.leftYAxisID),
+		// OI.mainJoy.getRawAxis(RobotMap.rightYAxisID));
+
+		// if ( getMatchTime() = 0.45 ){
+		// OI.mainJoy.setRumble(GenericHID.RumbleType.kLeftRumble,
+		// Math.random());
+		// OI.mainJoy.setRumble(GenericHID.RumbleType.kRightRumble,
+		// Math.random());
+		// }
+
+		// OI.mainJoy.setRumble(RumbleType.kLeftRumble, 0.25);
+		// OI.mainJoy.setRumble(RumbleType.kRightRumble, 0.25);
+		// } else {
+		drive.fodDrive(OI.mainJoy, leftXAxisID, leftYAxisID, OI.mainJoy, 4, 5,
+				SmartDashboard.getBoolean("use borkened thing", false));
+		// }
 		// TODO: Get rid of magic numbers.
 
 	}

@@ -160,13 +160,13 @@ public class VisionBase {
 									postProcessingFrame);
 							Imgproc.blur(copy, copy, new Size(2, 2));
 							Imgproc.threshold(copy, copy, 40, 255, Imgproc.THRESH_BINARY);
-
 							Mat and = copy.clone();
 							Core.bitwise_and(copy, postProcessingFrame, and);
 							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_GRAY2BGR);
 
 							// SmartDashboard.putNumber("Contours",
 							// contours.size());
+							int[] i = new int[5];
 							secondaryOutput.putFrame(postProcessingFrame);
 							Imgproc.findContours(and, contours, new Mat(), Imgproc.RETR_LIST,
 									Imgproc.CHAIN_APPROX_SIMPLE);
@@ -187,11 +187,11 @@ public class VisionBase {
 								// contours.clear();
 								SmartDashboard.putNumber("Largest width",
 										Imgproc.boundingRect(contours.get(largestID)).width);
+								Rect r = Imgproc.boundingRect(contours.get(largestID));
+								SmartDashboard.putNumber("Ratio", (((double) r.height) / ((double) r.width)));
 								if (contours.size() > 1) {
 									contours.remove(largestID);
 									largestID = findLargestContour(contours);
-									SmartDashboard.putNumber("Second Largest Width",
-											Imgproc.boundingRect(contours.get(largestID)).width);
 									XY = findXY(contours.get(largestID));
 									xs[1] = XY[0];
 									Imgproc.drawContours(and, contours, findLargestContour(contours),
@@ -201,6 +201,7 @@ public class VisionBase {
 											new Scalar(Math.random() * 255, Math.random() * 255, Math.random() * 255));
 									setAngleOff(((xs[0] + xs[1]) / 2) * degreesPerPixel);
 									setDistanceOff((xs[0] + xs[1]) / 2);
+
 									SmartDashboard.putNumber("X degrees off", ((xs[0] + xs[1]) / 2) * degreesPerPixel);
 									SmartDashboard.putNumber("Distance Relative", Math.abs(xs[0] - xs[1]));
 								} else {
@@ -268,7 +269,10 @@ public class VisionBase {
 		double largestArea = 0;
 		int id = 0;
 		for (int i = 0; i < m.size(); i++) {
-			if (Imgproc.contourArea(m.get(i)) > largestArea) {
+			Rect r = Imgproc.boundingRect(m.get(i));
+			if (((double) r.height / (double) r.width) <= 1) {
+				// pass
+			} else if (Imgproc.contourArea(m.get(i)) > largestArea) {
 				largestArea = Imgproc.contourArea(m.get(i));
 				id = i;
 			}
