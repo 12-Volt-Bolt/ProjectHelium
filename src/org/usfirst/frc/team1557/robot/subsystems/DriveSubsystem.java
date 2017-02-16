@@ -206,18 +206,18 @@ public class DriveSubsystem extends Subsystem {
 			boolean buttonPressed = true; // Checks if any of the required
 											// buttons were pressed
 			if (mainJoy.getRawButton(RobotMap.xButtonID))// X
-				rotationPID.setSetpoint(60); // Left
+				rotationPID.setSetpoint(-60); // Left
 			else if (mainJoy.getRawButton(RobotMap.aButtonID)) // A
 				rotationPID.setSetpoint(0); // Center
 			else if (mainJoy.getRawButton(RobotMap.bButtonID)) // B
-				rotationPID.setSetpoint(-60); // Right
+				rotationPID.setSetpoint(60); // Right
 			else
 				// Button was not pressed if this code runs
 				buttonPressed = false;
 			// Don't change the y speed of the robot
 			SmartDashboard.putNumber("Error", rotationPID.getError());
 			if (buttonPressed) {
-				if (Math.abs(rotationPID.getError()) <= 1) {
+				if (Math.abs(rotationPID.getError()) <= 8) {
 					if (!xPlanePID.isEnabled()) {
 						xPlanePID.enable();
 					}

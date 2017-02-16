@@ -156,7 +156,7 @@ public class VisionBase {
 
 							Imgproc.cvtColor(copy, copy, Imgproc.COLOR_BGR2GRAY);
 							Imgproc.cvtColor(postProcessingFrame, postProcessingFrame, Imgproc.COLOR_BGR2RGB);
-							Core.inRange(postProcessingFrame, new Scalar(0, 80, 0), new Scalar(180, 180, 180),
+							Core.inRange(postProcessingFrame, new Scalar(0, 80, 0), new Scalar(100, 180, 180),
 									postProcessingFrame);
 							Imgproc.blur(copy, copy, new Size(2, 2));
 							Imgproc.threshold(copy, copy, 40, 255, Imgproc.THRESH_BINARY);

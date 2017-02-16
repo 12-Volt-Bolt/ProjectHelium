@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //NOTE: DO NOT FORMAT THIS CLASS
 /**
@@ -333,7 +334,9 @@ public class BNO055 implements PIDSource {
 			// blocking manner. This sequence of events follows the process
 			// defined in the original adafruit source as closely as possible.
 			// XXX: It's likely some of these delays can be optimized out.
+			SmartDashboard.putNumber("State", state);
 			switch (state) {
+
 			case 0:
 				// Wait for the sensor to be present
 				if ((0xFF & read8(reg_t.BNO055_CHIP_ID_ADDR)) != BNO055_ID) {
@@ -417,6 +420,9 @@ public class BNO055 implements PIDSource {
 		} else {
 			// Sensor is initialized, periodically query position data
 			calculateVector();
+			SmartDashboard.putNumber("Raw Number", this.getHeading());
+			SmartDashboard.putNumber("Temp", this.getTemp());
+
 		}
 	}
 
@@ -683,10 +689,17 @@ public class BNO055 implements PIDSource {
 	 * Custom angle retrieval. This retrieves the angles after filter out the
 	 * init values.
 	 */
+	private double[] previousVals = new double[] { 0, 0, 0 };
+
 	public double[] getRotations() {
 		double[] vects = getVector();
-		return new double[] { vects[0] - savedInitValues[0], vects[1] - savedInitValues[1],
-				vects[2] - savedInitValues[2] };
+		if (vects[0] == 0) {
+			return previousVals;
+		} else {
+			previousVals = new double[] { vects[0] - savedInitValues[0], vects[1] - savedInitValues[1],
+					vects[2] - savedInitValues[2] };
+			return previousVals;
+		}
 	}
 
 	/**

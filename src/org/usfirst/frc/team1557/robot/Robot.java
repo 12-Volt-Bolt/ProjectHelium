@@ -47,9 +47,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_GYRONLY, vector_type_t.VECTOR_EULER, Port.kOnboard,
+		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
 				(byte) 0x28);
-		gyro.setMode(opmode_t.OPERATION_MODE_GYRONLY);
+		// gyro.setMode(opmode_t.OPERATION_MODE_GYRONLY);
 		SmartDashboard.putNumber("P", 0.01);
 		SmartDashboard.putNumber("I", 0.00000);
 		SmartDashboard.putNumber("D", 0.0);

@@ -66,23 +66,21 @@ public class OI {
 	}
 
 	public void init() {
-//		new Trigger() {
-//
-//			@Override
-//			public boolean get() {
-//				return (Robot.defense.limitSwitch.get() && (OI.mainJoy.getRawButton(RobotMap.leftBumperID)
-//						|| OI.mainJoy.getRawButton(RobotMap.rightBumperID)));
-//			}
-//		}.whenActive(new DefenseWheelsDownCommand());
-//
-//		new Trigger() {
-//
-//			@Override
-//			public boolean get() {
-//				return (!(Robot.defense.limitSwitch.get() && !(OI.mainJoy.getRawButton(RobotMap.leftBumperID)
-//						&& OI.mainJoy.getRawButton(RobotMap.rightBumperID))));
-//			}
-//		}.whenActive(new DefenseWheelsUp());
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return (/* Robot.defense.limitSwitch.get() && */ (OI.mainJoy.getRawButton(RobotMap.rightBumperID)));
+			}
+		}.whenActive(new DefenseWheelsDownCommand());
+
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return (/* !Robot.defense.limitSwitch.get() && */OI.mainJoy.getRawButton(RobotMap.leftBumperID));
+			}
+		}.whenActive(new DefenseWheelsUp());
 		new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new AlignToLoadCommand("AlignCommand"));
 	}
 
