@@ -12,9 +12,9 @@ public class AutoChooser {
 	 */
 	public void choose() {
 
-		if (new DigitalInput(0).get()) {
+		if (false) {
 			new CenterAuto().start();
-		} else if (new DigitalInput(1).get()) {
+		} else if (true) {
 			new RightAuto().start();
 		} else if (new DigitalInput(2).get()) {
 			new LeftAuto().start();

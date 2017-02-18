@@ -8,43 +8,43 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class StrafeCommand extends Command {
-	
+
 	double to;
-	/*double left = -1.0;
-	double right = 1.0;*/
+	/*
+	 * double left = -1.0; double right = 1.0;
+	 */
 	double si;
 
-    public StrafeCommand(double timeOut, double strafeInput) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	
-    	to = timeOut;
-    	si = strafeInput;
-    }
+	public StrafeCommand(double timeOut, double strafeInput) {
+		// Use requires() here to declare subsystem dependencies
+		requires(Robot.drive);
+		to = timeOut;
+		si = strafeInput;
+	}
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	
-    	this.setTimeout(to);
-    }
+	// Called just before this Command runs the first time
+	protected void initialize() {
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	Robot.drive.mecanumDrive(si, 0, 0);
-    	
-    }
+		this.setTimeout(to);
+	}
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		Robot.drive.mecanumDrive(si, 0, 0);
 
-    // Called once after isFinished returns true
-    protected void end() {
-    }
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    }
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		return this.isTimedOut();
+	}
+
+	// Called once after isFinished returns true
+	protected void end() {
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+	}
 }

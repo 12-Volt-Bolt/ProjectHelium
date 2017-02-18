@@ -51,8 +51,15 @@ public class Robot extends IterativeRobot {
 				(byte) 0x28);
 		// gyro.setMode(opmode_t.OPERATION_MODE_GYRONLY);
 		SmartDashboard.putNumber("P", 0.01);
-		SmartDashboard.putNumber("I", 0.00000);
+		SmartDashboard.putNumber("I", 0.0001);
 		SmartDashboard.putNumber("D", 0.0);
+
+		SmartDashboard.putNumber("Px", 0.005);
+		SmartDashboard.putNumber("Ix", 0.00000);
+		SmartDashboard.putNumber("Dx", 0.0);
+
+		SmartDashboard.putBoolean("DefenseDrive", false);
+		
 		oi = new OI();
 		climb = new ClimbSubsystem();
 		drive = new DriveSubsystem();
@@ -131,8 +138,7 @@ public class Robot extends IterativeRobot {
 		gyro.setOffsetValues(); // TODO: Remove this at competition!
 		drive.initDefaultCommand();
 		climb.initDefaultCommand();
-		DriveSubsystem.rotationPID.setPID(SmartDashboard.getNumber("P", 0.01), SmartDashboard.getNumber("I", 0.01),
-				SmartDashboard.getNumber("D", 0.01));
+
 		// ledServer.sendData("Let's hope this works!");
 	}
 

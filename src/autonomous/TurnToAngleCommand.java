@@ -45,6 +45,7 @@ public class TurnToAngleCommand extends Command {
 
 	protected void end() {
 		Robot.drive.autonomousTurnPID.reset();
+		Robot.drive.autonomousTurnPID.disable();
 	}
 
 	protected void interrupted() {

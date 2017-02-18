@@ -44,8 +44,13 @@ public class FODCommand extends Command {
 		// OI.mainJoy.setRumble(RumbleType.kLeftRumble, 0.25);
 		// OI.mainJoy.setRumble(RumbleType.kRightRumble, 0.25);
 		// } else {
-		drive.fodDrive(OI.mainJoy, leftXAxisID, leftYAxisID, OI.mainJoy, 4, 5,
-				SmartDashboard.getBoolean("use borkened thing", false));
+		if (SmartDashboard.getBoolean("DefenseDrive", false)) {
+			Robot.drive.defenseDrive(-OI.mainJoy.getRawAxis(RobotMap.leftYAxisID),
+					OI.mainJoy.getRawAxis(RobotMap.rightYAxisID));
+		} else {
+			drive.fodDrive(OI.mainJoy, leftXAxisID, leftYAxisID, OI.mainJoy, 4, 5,
+					SmartDashboard.getBoolean("use borkened thing", false));
+		}
 		// }
 		// TODO: Get rid of magic numbers.
 

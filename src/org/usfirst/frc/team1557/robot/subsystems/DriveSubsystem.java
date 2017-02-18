@@ -68,42 +68,40 @@ public class DriveSubsystem extends Subsystem {
 	private void init() {
 
 		// gyro.calibrate();
-		rotationPID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
-				SmartDashboard.getNumber("D", 0.01), 0, Robot.gyro, new PIDOutput() {
+		rotationPID = new PIDController(.010, 0.0001, 0, 0, Robot.gyro, new PIDOutput() {
 
-					@Override
-					public void pidWrite(double output) {
-						SmartDashboard.putNumber("pid out", output);
-					}
-				});
+			@Override
+			public void pidWrite(double output) {
+				SmartDashboard.putNumber("pid out", output);
+			}
+		});
 		// P ~= 0.0001, I = ?, D = ?;
-		xPlanePID = new PIDController(SmartDashboard.getNumber("P", 0.05), SmartDashboard.getNumber("I", 0.000001),
-				SmartDashboard.getNumber("D", 0.01), 0, new PIDSource() {
-					PIDSourceType k = PIDSourceType.kDisplacement;
+		xPlanePID = new PIDController(0.010, 0.00001, 0, 0, new PIDSource() {
+			PIDSourceType k = PIDSourceType.kDisplacement;
 
-					@Override
-					public void setPIDSourceType(PIDSourceType pidSource) {
+			@Override
+			public void setPIDSourceType(PIDSourceType pidSource) {
 
-						k = pidSource;
+				k = pidSource;
 
-					}
+			}
 
-					@Override
-					public double pidGet() {
-						return /* Robot.vb.getDistanceOff() */ 0;
-					}
+			@Override
+			public double pidGet() {
+				return /* Robot.vb.getDistanceOff() */ 0;
+			}
 
-					@Override
-					public PIDSourceType getPIDSourceType() {
+			@Override
+			public PIDSourceType getPIDSourceType() {
 
-						return k;
-					}
-				}, new PIDOutput() {
+				return k;
+			}
+		}, new PIDOutput() {
 
-					@Override
-					public void pidWrite(double output) {
-					}
-				});
+			@Override
+			public void pidWrite(double output) {
+			}
+		});
 		xPlanePID.enable();
 		xPlanePID.setAbsoluteTolerance(10);
 		rotationPID.setContinuous();
@@ -188,19 +186,19 @@ public class DriveSubsystem extends Subsystem {
 		rearLeft.set(leftSpeed);
 		// Natalie, the value is .68; however, as you mentioned, you should be
 		// multiplying by the fractions to avoid the small rounding error.
-		defenseRight.set(rightSpeed * .8 * .85);
-		defenseLeft.set(leftSpeed * .8 * .85);
+		defenseRight.set(rightSpeed /* .8 * .85 */);
+		defenseLeft.set(leftSpeed /* .8 *.85 */);
 
 	}
 
 	public void fodDrive(Joystick mainJoy, int xAxisMain, int yAxisMain, Joystick altJoy, int xAxisAlt, int yAxisAlt,
 			boolean rotationRelativeToJoystick) {
 		rotationPID.enable();
-		rotationPID.setAbsoluteTolerance(2);
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
+
 		double r = 0;
 		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.1) {
-			r = altJoy.getRawAxis(xAxisAlt);
+			r = altJoy.getRawAxis(xAxisAlt) / 2;
 			rotationPID.setSetpoint(getGyroAngle());
 		} else {
 			boolean buttonPressed = true; // Checks if any of the required
@@ -217,7 +215,7 @@ public class DriveSubsystem extends Subsystem {
 			// Don't change the y speed of the robot
 			SmartDashboard.putNumber("Error", rotationPID.getError());
 			if (buttonPressed) {
-				if (Math.abs(rotationPID.getError()) <= 8) {
+				if (Math.abs(rotationPID.getError()) <= 4) {
 					if (!xPlanePID.isEnabled()) {
 						xPlanePID.enable();
 					}
@@ -226,10 +224,9 @@ public class DriveSubsystem extends Subsystem {
 					// robot, not the field.
 					// TODO: Set the speeds of the x according to the
 					// leftRightPID
-					output[0] = xPlanePID.get();
+					output[0] = mainJoy.getRawAxis(xAxisMain) / 2;
 					// Don't change the y
-
-					output[1] = -mainJoy.getRawAxis(yAxisMain);
+					output[1] = -(mainJoy.getRawAxis(yAxisMain)) / 2;
 				} else {
 					// If the button was pressed but we aren't within the
 					// deadzone, 0 out the y speed. Also 0 out the x.
@@ -422,7 +419,7 @@ public class DriveSubsystem extends Subsystem {
 	 *            The rotation to turn to relative to the field.
 	 */
 	public void turnOnlyInit(double setpoint) {
-		autonomousTurnPID = new PIDController(0, 0, 0, Robot.gyro, new PIDOutput() {
+		autonomousTurnPID = new PIDController(.010, 0.0001, 0, Robot.gyro, new PIDOutput() {
 
 			@Override
 			public void pidWrite(double output) {
@@ -431,7 +428,7 @@ public class DriveSubsystem extends Subsystem {
 			}
 		});
 		autonomousTurnPID.setSetpoint(setpoint);
-		autonomousTurnPID.isEnabled();
+		autonomousTurnPID.enable();
 	}
 
 }
