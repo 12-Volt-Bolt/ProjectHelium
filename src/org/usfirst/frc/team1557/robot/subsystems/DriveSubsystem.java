@@ -209,9 +209,11 @@ public class DriveSubsystem extends Subsystem {
 				rotationPID.setSetpoint(0); // Center
 			else if (mainJoy.getRawButton(RobotMap.bButtonID)) // B
 				rotationPID.setSetpoint(60); // Right
-			else
-				// Button was not pressed if this code runs
-				buttonPressed = false;
+			else if (mainJoy.getRawButton(RobotMap.yButtonID)) {
+				rotationPID.setSetpoint(45);
+			}
+			// Button was not pressed if this code runs
+			buttonPressed = false;
 			// Don't change the y speed of the robot
 			SmartDashboard.putNumber("Error", rotationPID.getError());
 			if (buttonPressed) {
@@ -224,9 +226,9 @@ public class DriveSubsystem extends Subsystem {
 					// robot, not the field.
 					// TODO: Set the speeds of the x according to the
 					// leftRightPID
-					output[0] = mainJoy.getRawAxis(xAxisMain) / 2;
+					output[0] = xPlanePID.get();//mainJoy.getRawAxis(xAxisMain) / 2;
 					// Don't change the y
-					output[1] = -(mainJoy.getRawAxis(yAxisMain)) / 2;
+					output[1] = (mainJoy.getRawAxis(yAxisMain)) / 2;
 				} else {
 					// If the button was pressed but we aren't within the
 					// deadzone, 0 out the y speed. Also 0 out the x.
@@ -243,6 +245,11 @@ public class DriveSubsystem extends Subsystem {
 			}
 			r = rotationPID.get();
 		}
+		if (Math.abs(rotationPID.getSetpoint()) > 180) {
+			// BreakPoint
+			System.out.println("test");
+		}
+		SmartDashboard.putNumber("Setpoint", rotationPID.getSetpoint());
 		SmartDashboard.putNumber("Voltage output", ultraSensor.getVoltage());
 		SmartDashboard.putNumber("Distance", ultraSensor.getVoltage() / CONVERSION_VOLTAGE);
 		double fr = -output[1] + r + output[0];

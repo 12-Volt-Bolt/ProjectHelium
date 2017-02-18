@@ -81,7 +81,8 @@ public class OI {
 				return (/* !Robot.defense.limitSwitch.get() && */OI.mainJoy.getRawButton(RobotMap.leftBumperID));
 			}
 		}.whenActive(new DefenseWheelsUp());
-		new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new AlignToLoadCommand("AlignCommand"));
+		// new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new
+		// AlignToLoadCommand("AlignCommand"));
 	}
 
 }
