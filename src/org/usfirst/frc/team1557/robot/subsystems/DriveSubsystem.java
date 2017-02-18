@@ -104,19 +104,20 @@ public class DriveSubsystem extends Subsystem {
 		});
 		xPlanePID.enable();
 		xPlanePID.setAbsoluteTolerance(10);
+		rotationPID.setInputRange(-180, 180);
 		rotationPID.setContinuous();
-		rotationPID.enable();
-		rotationPID.setAbsoluteTolerance(6);
+		// rotationPID.enable();
+		rotationPID.setAbsoluteTolerance(1);
 	}
 
 	public static double getGyroAngle() {
 
 		double gyroAngle = Robot.gyro.pidGet();
-
+		// gyroAngle+=
 		if (Math.abs(gyroAngle) > 360) {
 			gyroAngle = gyroAngle % 360;
 		}
-		if (Math.abs(gyroAngle) > 180) {
+		if (Math.abs(gyroAngle) >= 180) {
 			if (gyroAngle > 0) {
 				gyroAngle = gyroAngle - 360;
 			} else {
@@ -125,10 +126,6 @@ public class DriveSubsystem extends Subsystem {
 		}
 
 		return gyroAngle;
-	}
-
-	public void setGyroSetpoint(double d) {
-		rotationPID.setSetpoint(d);
 	}
 
 	public void mecanumDrive(double x, double y, double r) {
@@ -191,16 +188,26 @@ public class DriveSubsystem extends Subsystem {
 
 	}
 
+	private long timeToReenable = 0;
+
 	public void fodDrive(Joystick mainJoy, int xAxisMain, int yAxisMain, Joystick altJoy, int xAxisAlt, int yAxisAlt,
 			boolean rotationRelativeToJoystick) {
-		rotationPID.enable();
+		// rotationPID.enable();
 		double[] output = output(mainJoy, xAxisMain, yAxisMain);
 
 		double r = 0;
 		if (Math.abs(altJoy.getRawAxis(xAxisAlt)) > 0.1) {
+			rotationPID.disable();
+			rotationPID.reset();
+			timeToReenable = System.currentTimeMillis();
 			r = altJoy.getRawAxis(xAxisAlt) / 2;
-			rotationPID.setSetpoint(getGyroAngle());
+			// rotationPID.setSetpoint(getGyroAngle());
 		} else {
+			if (System.currentTimeMillis() - timeToReenable >= 0_250 && !rotationPID.isEnabled()) {
+				rotationPID.setSetpoint(getGyroAngle());
+				rotationPID.enable();
+
+			}
 			boolean buttonPressed = true; // Checks if any of the required
 											// buttons were pressed
 			if (mainJoy.getRawButton(RobotMap.xButtonID))// X
@@ -226,9 +233,10 @@ public class DriveSubsystem extends Subsystem {
 					// robot, not the field.
 					// TODO: Set the speeds of the x according to the
 					// leftRightPID
-					output[0] = xPlanePID.get();//mainJoy.getRawAxis(xAxisMain) / 2;
+					output[0] = xPlanePID.get();// mainJoy.getRawAxis(xAxisMain)
+												// / 2;
 					// Don't change the y
-					output[1] = (mainJoy.getRawAxis(yAxisMain)) / 2;
+					output[1] = mainJoy.getRawAxis(yAxisMain) / 2;
 				} else {
 					// If the button was pressed but we aren't within the
 					// deadzone, 0 out the y speed. Also 0 out the x.
@@ -243,12 +251,10 @@ public class DriveSubsystem extends Subsystem {
 				// If the button was not pressed,
 
 			}
-			r = rotationPID.get();
+			if (rotationPID.isEnabled())
+				r = rotationPID.get();
 		}
-		if (Math.abs(rotationPID.getSetpoint()) > 180) {
-			// BreakPoint
-			System.out.println("test");
-		}
+
 		SmartDashboard.putNumber("Setpoint", rotationPID.getSetpoint());
 		SmartDashboard.putNumber("Voltage output", ultraSensor.getVoltage());
 		SmartDashboard.putNumber("Distance", ultraSensor.getVoltage() / CONVERSION_VOLTAGE);
@@ -408,12 +414,12 @@ public class DriveSubsystem extends Subsystem {
 
 	public void turnOnlyDrive(boolean isDefenseDrive) {
 		if (isDefenseDrive) {
-			defenseRight.set(-autonomousTurnPID.get() * .85 * .8);
-			defenseLeft.set(autonomousTurnPID.get() * .85 * .8);
+			defenseRight.set(-autonomousTurnPID.get());
+			defenseLeft.set(autonomousTurnPID.get());
 		}
 		// set the speed of the right mecanum wheels using the relevant PID
-		frontRight.set(-autonomousTurnPID.get());
-		rearRight.set(-autonomousTurnPID.get());
+		frontRight.set(autonomousTurnPID.get());
+		rearRight.set(autonomousTurnPID.get());
 		// set the speed of the left mecanum wheels using the relevant PID
 		rearLeft.set(autonomousTurnPID.get());
 		frontLeft.set(autonomousTurnPID.get());

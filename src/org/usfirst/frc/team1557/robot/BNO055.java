@@ -820,7 +820,7 @@ public class BNO055 implements PIDSource {
 		if (Math.abs(gyroAngle) > 360) {
 			gyroAngle = gyroAngle % 360;
 		}
-		if (Math.abs(gyroAngle) > 180) {
+		if (Math.abs(gyroAngle) >= 180) {
 			if (gyroAngle > 0) {
 				gyroAngle = gyroAngle - 360;
 			} else {

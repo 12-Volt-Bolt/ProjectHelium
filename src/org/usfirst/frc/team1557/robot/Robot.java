@@ -59,7 +59,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Dx", 0.0);
 
 		SmartDashboard.putBoolean("DefenseDrive", false);
-		
+
 		oi = new OI();
 		climb = new ClimbSubsystem();
 		drive = new DriveSubsystem();
@@ -88,6 +88,7 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		DriveSubsystem.rotationPID.disable();
+		SmartDashboard.putBoolean("Is Enabled", drive.rotationPID.isEnabled());
 		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
 		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
@@ -136,6 +137,7 @@ public class Robot extends IterativeRobot {
 		// running = true;
 		drive.rotationPID.setSetpoint(0);
 		gyro.setOffsetValues(); // TODO: Remove this at competition!
+		drive.rotationPID.setSetpoint(0);
 		drive.initDefaultCommand();
 		climb.initDefaultCommand();
 

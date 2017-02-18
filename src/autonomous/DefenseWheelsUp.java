@@ -1,6 +1,7 @@
 package autonomous;
 
 import org.usfirst.frc.team1557.robot.Robot;
+import org.usfirst.frc.team1557.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -17,6 +18,7 @@ public class DefenseWheelsUp extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		RobotMap.timeSinceLowerOrLift = System.currentTimeMillis();
 		this.setTimeout(3);
 	}
 

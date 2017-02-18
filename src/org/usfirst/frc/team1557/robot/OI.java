@@ -66,11 +66,13 @@ public class OI {
 	}
 
 	public void init() {
+
 		new Trigger() {
 
 			@Override
 			public boolean get() {
-				return (/* Robot.defense.limitSwitch.get() && */ (OI.mainJoy.getRawButton(RobotMap.rightBumperID)));
+				return (Robot.defense.limitSwitch.get() && (OI.mainJoy.getRawButton(RobotMap.rightBumperID))
+						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
 			}
 		}.whenActive(new DefenseWheelsDownCommand());
 
@@ -78,7 +80,8 @@ public class OI {
 
 			@Override
 			public boolean get() {
-				return (/* !Robot.defense.limitSwitch.get() && */OI.mainJoy.getRawButton(RobotMap.leftBumperID));
+				return (!Robot.defense.limitSwitch.get() && !OI.mainJoy.getRawButton(RobotMap.rightBumperID)
+						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
 			}
 		}.whenActive(new DefenseWheelsUp());
 		// new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new
