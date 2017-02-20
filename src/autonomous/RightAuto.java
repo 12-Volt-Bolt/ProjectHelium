@@ -34,11 +34,11 @@ public class RightAuto extends CommandGroup {
 		addSequential(new TurnToAngleCommand(-60, 5, 1 / 16, true));
 		// the distance from the base line to the lift at 60 degrees is
 		// approximately 50 inches
-		addSequential(new DistanceCommand(50 - 5.5, 5, 1 / 16));
+		addSequential(new DistanceCommand(50 - 5.5 - 35, 5, 1 / 16));
 		// move back so we can strafe
 		addSequential(new DistanceCommand(-8, 5, 1 / 16));
 		// lift defense wheels so we can strafe
-		addSequential(new DefenseWheelsUp());
+		addSequential(new LeftDefenseUpCommand());
 		// strafe right past baseline
 		addSequential(new StrafeCommand(5, 1.0));
 		// addSequential(new TurnToAngleCommand(90, 3, 3, false));

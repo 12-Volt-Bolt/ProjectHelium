@@ -30,11 +30,11 @@ public class FODCommand extends Command {
 
 	protected void execute() {
 
-		if (!Robot.defense.limitSwitch.get()
+		if (!Robot.defense.leftLimitSwitch.get()
 				&& /*
 					 * TODO: THis should be inverted when the limitswitch is
 					 * plugged in
-					 */Robot.defense.limitSwitchTwo.get()) {
+					 */Robot.defense.rightLimitSwitch.get()) {
 			Robot.drive.defenseDrive(-OI.mainJoy.getRawAxis(RobotMap.leftYAxisID),
 					OI.mainJoy.getRawAxis(RobotMap.rightYAxisID));
 		} else if (SmartDashboard.getBoolean("DefenseDrive", false)) {

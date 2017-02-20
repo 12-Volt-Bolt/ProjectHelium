@@ -3,8 +3,10 @@ package org.usfirst.frc.team1557.robot;
 import org.usfirst.frc.team1557.robot.commands.AlignToLoadCommand;
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
 
-import autonomous.DefenseWheelsDownCommand;
-import autonomous.DefenseWheelsUp;
+import autonomous.LeftDefenseDownCommand;
+import autonomous.LeftDefenseUpCommand;
+import autonomous.RightDefenseDownCommand;
+import autonomous.RightDefenseUpCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
@@ -66,24 +68,44 @@ public class OI {
 	}
 
 	public void init() {
+		//LEFT
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return (Robot.defense.leftLimitSwitch.get() && (OI.mainJoy.getRawButton(RobotMap.rightBumperID))
+						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
+			}
+		}.whenActive(new LeftDefenseDownCommand());
 
 		new Trigger() {
 
 			@Override
 			public boolean get() {
-				return (Robot.defense.limitSwitch.get() && (OI.mainJoy.getRawButton(RobotMap.rightBumperID))
+				return (!Robot.defense.leftLimitSwitch.get() && !OI.mainJoy.getRawButton(RobotMap.rightBumperID)
 						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
 			}
-		}.whenActive(new DefenseWheelsDownCommand());
+		}.whenActive(new LeftDefenseUpCommand());
+		//LEFT
+		//RIGHT
+		new Trigger() {
+
+			@Override
+			public boolean get() {
+				return (Robot.defense.rightLimitSwitch.get() && (OI.mainJoy.getRawButton(RobotMap.rightBumperID))
+						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
+			}
+		}.whenActive(new RightDefenseDownCommand());
 
 		new Trigger() {
 
 			@Override
 			public boolean get() {
-				return (!Robot.defense.limitSwitch.get() && !OI.mainJoy.getRawButton(RobotMap.rightBumperID)
+				return (!Robot.defense.rightLimitSwitch.get() && !OI.mainJoy.getRawButton(RobotMap.rightBumperID)
 						&& System.currentTimeMillis() - RobotMap.timeSinceLowerOrLift >= 3_000);
 			}
-		}.whenActive(new DefenseWheelsUp());
+		}.whenActive(new RightDefenseUpCommand());
+		
 		// new JoystickButton(mainJoy, RobotMap.yButtonID).whenPressed(new
 		// AlignToLoadCommand("AlignCommand"));
 	}

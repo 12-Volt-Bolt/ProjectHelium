@@ -34,11 +34,11 @@ public class LeftAuto extends CommandGroup {
     	//turn to an angle to be perpendicular to the hexagon (airship)
     	addSequential(new TurnToAngleCommand(60, 5, 1/16, true));
     	//the distance from the base line to the lift at 60 degrees is approximately 50 inches, but we need to account for robot space. We are subtracting 5.5 because the peg in 9 inches long and our gear catcher in 3.5 inches deep; 9 - 3.5 = 5.5. Though, I think this may have to be adjusted later because of bumpers as well.
-    	addSequential(new DistanceCommand(50 - 5.5, 5, 1/16));
+    	addSequential(new DistanceCommand(50 - 5.5 - 35, 5, 1/16));
     	//move back 8 inches 
     	addSequential(new DistanceCommand(-8, 5, 1/16));
     	//lift defense wheels so we can strafe
-    	addSequential(new DefenseWheelsUp());
+    	addSequential(new LeftDefenseUpCommand());
     	//strafe left for 5 seconds (will probably need to be changed) past the baseline
     	addSequential(new StrafeCommand(5, -1.0));
     }

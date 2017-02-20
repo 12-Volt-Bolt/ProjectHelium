@@ -17,25 +17,12 @@ public class DefenseWheelsSubsystem extends Subsystem {
 
 	public static CANTalon wheelToggleMotorLeft = new CANTalon(RobotMap.defenseToggleMotorLeft);
 	public static CANTalon wheelToggleMotorRight = new CANTalon(RobotMap.defenseToggleMotorRight);
-	public static DigitalInput limitSwitch = new DigitalInput(9);
-	public static DigitalInput limitSwitchTwo = new DigitalInput(8);
+	public static DigitalInput leftLimitSwitch = new DigitalInput(9);
+	public static DigitalInput rightLimitSwitch = new DigitalInput(8);
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 	}
 
-	public void wheelsDown() {
-
-		wheelToggleMotorLeft.set(1.0);
-		wheelToggleMotorRight.set(-1.0);
-
-	}
-
-	public void wheelsUp() {
-
-		wheelToggleMotorLeft.set(-1.0);
-		wheelToggleMotorRight.set(1.0);
-
-	}
 }

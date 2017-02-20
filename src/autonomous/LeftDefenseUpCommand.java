@@ -8,12 +8,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DefenseWheelsDownCommand extends Command {
+public class LeftDefenseUpCommand extends Command {
 
-	public DefenseWheelsDownCommand() {
+	public LeftDefenseUpCommand() {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
-		requires(Robot.defense);
 	}
 
 	// Called just before this Command runs the first time
@@ -24,18 +23,17 @@ public class DefenseWheelsDownCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.defense.wheelsDown();
+		Robot.defense.wheelToggleMotorLeft.set(1.0);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return  !Robot.defense.limitSwitch.get() || isTimedOut();
+		return isTimedOut();
 	}
 
 	// Called once after isFinished returns true
 	protected void end() {
 		Robot.defense.wheelToggleMotorLeft.set(0);
-		Robot.defense.wheelToggleMotorRight.set(0);
 	}
 
 	// Called when another command which requires one or more of the same
