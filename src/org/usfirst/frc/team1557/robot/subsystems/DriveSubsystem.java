@@ -76,7 +76,7 @@ public class DriveSubsystem extends Subsystem {
 			}
 		});
 		// P ~= 0.0001, I = ?, D = ?;
-		xPlanePID = new PIDController(0.010, 0.00001, 0, 0, new PIDSource() {
+		xPlanePID = new PIDController(0.0055, 0.00005, 0, 0, new PIDSource() {
 			PIDSourceType k = PIDSourceType.kDisplacement;
 
 			@Override
@@ -104,6 +104,8 @@ public class DriveSubsystem extends Subsystem {
 		});
 		xPlanePID.enable();
 		xPlanePID.setAbsoluteTolerance(10);
+		xPlanePID.setOutputRange(-1, 1);
+		rotationPID.setOutputRange(-1, 1);
 		rotationPID.setInputRange(-180, 180);
 		rotationPID.setContinuous();
 		// rotationPID.enable();
@@ -166,10 +168,8 @@ public class DriveSubsystem extends Subsystem {
 		rl = rl / highestValue;
 		rr = rr / highestValue;
 
-		fl = fl * (-1);
-
-		frontRight.set(-fr);
-		rearRight.set(-rr);
+		frontRight.set(fr);
+		rearRight.set(rr);
 		rearLeft.set(-rl);
 		frontLeft.set(-fl);
 
@@ -218,13 +218,15 @@ public class DriveSubsystem extends Subsystem {
 				rotationPID.setSetpoint(60); // Right
 			else if (mainJoy.getRawButton(RobotMap.yButtonID)) {
 				rotationPID.setSetpoint(45);
-			}
-			// Button was not pressed if this code runs
-			buttonPressed = false;
-			// Don't change the y speed of the robot
+			} else {
+				// Button was not pressed if this code runs
+				buttonPressed = false;
+
+			} // Don't change the y speed of the robot
 			SmartDashboard.putNumber("Error", rotationPID.getError());
+			System.out.println(buttonPressed);
 			if (buttonPressed) {
-				if (Math.abs(rotationPID.getError()) <= 4) {
+				if (Math.abs(rotationPID.getError()) <= 7) {
 					if (!xPlanePID.isEnabled()) {
 						xPlanePID.enable();
 					}
@@ -233,10 +235,11 @@ public class DriveSubsystem extends Subsystem {
 					// robot, not the field.
 					// TODO: Set the speeds of the x according to the
 					// leftRightPID
+					SmartDashboard.putNumber("xPlanePID", xPlanePID.get());
 					output[0] = xPlanePID.get();// mainJoy.getRawAxis(xAxisMain)
 												// / 2;
 					// Don't change the y
-					output[1] = mainJoy.getRawAxis(yAxisMain) / 2;
+					output[1] = -(mainJoy.getRawAxis(yAxisMain) / 2);
 				} else {
 					// If the button was pressed but we aren't within the
 					// deadzone, 0 out the y speed. Also 0 out the x.
@@ -249,7 +252,11 @@ public class DriveSubsystem extends Subsystem {
 				}
 			} else {
 				// If the button was not pressed,
-
+				// deadzone, 0 out the y speed. Also 0 out the x.
+				if (xPlanePID.isEnabled()) {
+					xPlanePID.disable();
+					xPlanePID.setSetpoint(0);
+				}
 			}
 			if (rotationPID.isEnabled())
 				r = rotationPID.get();
@@ -432,7 +439,7 @@ public class DriveSubsystem extends Subsystem {
 	 *            The rotation to turn to relative to the field.
 	 */
 	public void turnOnlyInit(double setpoint) {
-		autonomousTurnPID = new PIDController(.010, 0.0001, 0, Robot.gyro, new PIDOutput() {
+		autonomousTurnPID = new PIDController(.0055, 0.0001, 0, Robot.gyro, new PIDOutput() {
 
 			@Override
 			public void pidWrite(double output) {
