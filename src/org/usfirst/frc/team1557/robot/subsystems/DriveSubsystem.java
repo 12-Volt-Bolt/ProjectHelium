@@ -283,8 +283,8 @@ public class DriveSubsystem extends Subsystem {
 
 		frontRight.set(fr);
 		rearRight.set(rr);
-		rearLeft.set(-rl/2);
-		frontLeft.set(-fl/2);
+		rearLeft.set(-rl);
+		frontLeft.set(-fl);
 	}
 
 	private double[] output(Joystick joy, int xAxis, int yAxis) {
