@@ -71,6 +71,7 @@ public class RobotMap {
 	public static int leftBumperID = 5; // hold for defense wheels
 	public static int rightBumperID = 6; // hold for defense wheels
 
+	 // REMEMBER TO FIX THE THE ID NUMBERS TODO
 	public static int frontRightMotorID = 12;
 	public static int frontLeftMotorID = 13;
 	public static int rearRightMotorID = 21;

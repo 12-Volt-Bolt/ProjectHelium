@@ -1,8 +1,10 @@
 
 package org.usfirst.frc.team1557.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -19,6 +21,8 @@ import org.usfirst.frc.team1557.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DefenseWheelsSubsystem;
 import org.usfirst.frc.team1557.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1557.robot.vision.VisionBase;
+
+import com.kauailabs.navx.frc.*;
 
 import autonomous.AutoChooser;
 
@@ -39,7 +43,9 @@ public class Robot extends IterativeRobot {
 	// public static LEDServer ledServer = new LEDServer();
 	public static DefenseWheelsSubsystem defense;
 	public static AutoChooser autoChooser;
-	public static BNO055 gyro;
+	//public static BNO055 gyro;
+	public static AHRS gyro;
+	
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -47,7 +53,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
+	
+		 // 58-62: try to "Constructed the NavX Gyro; if the gyro is not, the 
+		 // the runtime error will be caught to allow the system to continue"
+		 try {
+			 gyro = new AHRS(SPI.Port.kMXP);
+		 } catch (RuntimeException ex) {
+			 DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+		 }
+		
+		
+		/*	gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
 				(byte) 0x28);
 		// gyro.setMode(opmode_t.OPERATION_MODE_GYRONLY);
 		SmartDashboard.putNumber("P", 0.01);
@@ -56,7 +72,7 @@ public class Robot extends IterativeRobot {
 
 		SmartDashboard.putNumber("Px", 0.005);
 		SmartDashboard.putNumber("Ix", 0.00000);
-		SmartDashboard.putNumber("Dx", 0.0);
+		SmartDashboard.putNumber("Dx", 0.0); */
 
 		SmartDashboard.putBoolean("DefenseDrive", false);
 
@@ -67,7 +83,7 @@ public class Robot extends IterativeRobot {
 		oi.init();
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
-		gyro.setOffsetValues();
+	//	gyro.setOffsetValues(); WHAT IS THE  TODO
 		drive.rotationPID.setSetpoint(0);
 		// ledServer.init(5801);
 		autoChooser = new AutoChooser();
@@ -89,9 +105,12 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		DriveSubsystem.rotationPID.disable();
 		SmartDashboard.putBoolean("Is Enabled", drive.rotationPID.isEnabled());
-		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
+		SmartDashboard.putNumber("navX", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
-		SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
+		// The code below is supposed print information for from the gyro
+		// Though must be fixed for navX TODO
+		
+	/*	SmartDashboard.putString("SystemStatus", "self-test" + gyro.getSystemStatus().self_test_result + "error"
 				+ gyro.getSystemStatus().system_error + "status" + gyro.getSystemStatus().system_status);
 		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
 		SmartDashboard.putString("Rev number",
@@ -99,6 +118,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Calibration",
 				"Gyro: " + gyro.getCalibration().gyro + "   Sys: " + gyro.getCalibration().sys);
 
+*/
+
+		
 	}
 
 	/**
@@ -115,8 +137,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		drive.rotationPID.setSetpoint(0);
-		gyro.setOffsetValues();
+	//	gyro.setOffsetValues(); TODO
 		autoChooser.choose();
+		
+	      while (isOperatorControl() && isEnabled()) {
+	         
+	    	  if ( OI.mainJoy.getRawButton(0)) {
+	            gyro.reset();
+	    	  }
+	    	  
+	      }
 
 	}
 
@@ -136,10 +166,11 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		// running = true;
 		drive.rotationPID.setSetpoint(0);
-		gyro.setOffsetValues(); // TODO: Remove this at competition!
+//		gyro.setOffsetValues(); // TODO: Remove this at competition!
 		drive.rotationPID.setSetpoint(0);
 		drive.initDefaultCommand();
 		climb.initDefaultCommand();
+		
 
 		// ledServer.sendData("Let's hope this works!");
 	}
@@ -155,11 +186,17 @@ public class Robot extends IterativeRobot {
 				new FODCommand("FODDrive").start();
 			}
 		}
-		SmartDashboard.putNumber("BNO055", drive.getGyroAngle());
+		SmartDashboard.putNumber("NavX", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
-		SmartDashboard.putString("SystemStatus", "self-test: " + gyro.getSystemStatus().self_test_result + "error: "
+
+		// Same here  
+		/*	SmartDashboard.putString("SystemStatus", "self-test: " + gyro.getSystemStatus().self_test_result + "error: "
 				+ gyro.getSystemStatus().system_error + "status: " + gyro.getSystemStatus().system_status);
-		SmartDashboard.putBoolean("Is Present", gyro.isSensorPresent());
+		SmartDashboard.putBoolean("Is Present", gyro.isConnected());
+
+
+*/
+		
 
 	}
 
