@@ -73,6 +73,7 @@ public class DriveSubsystem extends Subsystem {
 			@Override
 			public void pidWrite(double output) {
 				SmartDashboard.putNumber("pid out", output);
+				SmartDashboard.putNumber("Nav-X Angle", Robot.gyro.getAngle());
 			}
 		});
 		// P ~= 0.0001, I = ?, D = ?;
@@ -168,10 +169,26 @@ public class DriveSubsystem extends Subsystem {
 		rl = rl / highestValue;
 		rr = rr / highestValue;
 
+	
+		if (OI.mainJoy.getRawButton(RobotMap.rightBumperID)) {
+		
 		frontRight.set(fr);
 		rearRight.set(rr);
 		rearLeft.set(-rl);
 		frontLeft.set(-fl);
+		} 
+		
+		else if (!(OI.mainJoy.getRawButton(RobotMap.rightBumperID))) {
+		
+			
+			frontRight.set(fr * 0.5);
+			rearRight.set(rr * 0.5) ;
+			rearLeft.set(-rl * 0.5);
+			frontLeft.set(-fl * 0.5);
+			
+			
+			
+		}
 
 	}
 

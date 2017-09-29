@@ -1,10 +1,13 @@
 
 package org.usfirst.frc.team1557.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -45,7 +48,8 @@ public class Robot extends IterativeRobot {
 	public static AutoChooser autoChooser;
 	//public static BNO055 gyro;
 	public static AHRS gyro;
-	
+	public static Encoder encLeft = new Encoder(new DigitalInput(0), new DigitalInput(1));
+	public static Encoder encRight = new Encoder(new DigitalInput(2), new DigitalInput(3));
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -54,13 +58,20 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 	
+		
 		 // 58-62: try to "Constructed the NavX Gyro; if the gyro is not, the 
 		 // the runtime error will be caught to allow the system to continue"
 		 try {
-			 gyro = new AHRS(SPI.Port.kMXP);
+			 gyro = new AHRS(SerialPort.Port.kUSB);
+			 
+			 gyro.getYaw();
 		 } catch (RuntimeException ex) {
 			 DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
 		 }
+		 
+		 
+		 
+		 SmartDashboard.putBoolean("Is Nav-X here", gyro.isConnected());
 		
 		
 		/*	gyro = BNO055.getInstance(opmode_t.OPERATION_MODE_IMUPLUS, vector_type_t.VECTOR_EULER, Port.kOnboard,
@@ -84,7 +95,8 @@ public class Robot extends IterativeRobot {
 		vb.start("MainCamera", "10.15.57.90");
 		vb.startProcess();
 	//	gyro.setOffsetValues(); WHAT IS THE  TODO
-		drive.rotationPID.setSetpoint(0);
+	// Maybe change this to drive
+		DriveSubsystem.rotationPID.setSetpoint(0);
 		// ledServer.init(5801);
 		autoChooser = new AutoChooser();
 
@@ -180,6 +192,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 		Scheduler.getInstance().run();
 		if (OI.mainJoy.getRawButton(RobotMap.yButtonID) == false) {
 			if (drive.getCurrentCommand().getName() != "FODDrive" && drive.getCurrentCommand() != null) {
@@ -188,12 +201,16 @@ public class Robot extends IterativeRobot {
 		}
 		SmartDashboard.putNumber("NavX", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
+		SmartDashboard.putNumber("Encoder Raw Data Left", Robot.encLeft.getRaw());
+		SmartDashboard.putNumber("Encoder Raw Data Right", Robot.encRight.getRaw());
+
+		
 
 		// Same here  
 		/*	SmartDashboard.putString("SystemStatus", "self-test: " + gyro.getSystemStatus().self_test_result + "error: "
 				+ gyro.getSystemStatus().system_error + "status: " + gyro.getSystemStatus().system_status);
 		SmartDashboard.putBoolean("Is Present", gyro.isConnected());
-
+E
 
 */
 		

@@ -25,6 +25,8 @@ public class OI {
 	// mainJoy is the twisty one for mecanum drive. It will be one the right
 	// side.
 	public static Joystick mainJoy = new Joystick(RobotMap.mainJoyID);
+	public static Joystick coJoy = new Joystick(RobotMap.coJoyID);
+
 	// public static Joystick defenseJoy = new Joystick(RobotMap.defenseJoyID);
 	// public static JoystickButton defenseDriveButtonOne = new
 	// JoystickButton(mainJoy, RobotMap.defenseDriveButtonOneID);

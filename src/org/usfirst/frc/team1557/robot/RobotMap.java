@@ -51,9 +51,11 @@ public class RobotMap {
 	// }
 	// }
 
-	public static int mainJoyZAxisID = 15;
+	public static int mainJoyZAxisID = 2;  //15
 
 	public static int mainJoyID = 0;
+	
+	public static int coJoyID = 1;
 
 	public static int leftXAxisID = 0;
 	public static int leftYAxisID = 1;
