@@ -178,7 +178,15 @@ public class DriveSubsystem extends Subsystem {
 		frontLeft.set(-fl);
 		} 
 		
-		else if (!(OI.mainJoy.getRawButton(RobotMap.rightBumperID))) {
+		else if (!OI.mainJoy.getRawButton(RobotMap.rightBumperID)) {
+			
+			frontRight.set(fr * 0.5);
+			rearRight.set(rr* 0.5);
+			rearLeft.set(-rl* 0.5);
+			frontLeft.set(-fl* 0.5);
+			} 
+		
+		/* else if (!(OI.mainJoy.getRawButton(RobotMap.rightBumperID))) {
 		
 			
 			frontRight.set(fr * 0.5);
@@ -188,7 +196,7 @@ public class DriveSubsystem extends Subsystem {
 			
 			
 			
-		}
+		} */
 
 	}
 

@@ -69,6 +69,10 @@ public class Robot extends IterativeRobot {
 			 DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
 		 }
 		 
+		 gyro.reset();
+		 gyro.zeroYaw();
+		 
+		 
 		 
 		 
 		 SmartDashboard.putBoolean("Is Nav-X here", gyro.isConnected());
@@ -192,7 +196,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
+	
 		Scheduler.getInstance().run();
 		if (OI.mainJoy.getRawButton(RobotMap.yButtonID) == false) {
 			if (drive.getCurrentCommand().getName() != "FODDrive" && drive.getCurrentCommand() != null) {

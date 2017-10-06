@@ -37,11 +37,22 @@ public class MecanumDriveCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 	// The Commented code below uses Levi's mecanum drive function
-		 	Robot.drive.mecanumDrive(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID)); // OI.mainJoy.getRawAxis(mainJoyZAxisID));
+		 //	Robot.drive.mecanumDrive(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID)); // OI.mainJoy.getRawAxis(mainJoyZAxisID));
 	//	Robot.drive.mecanumDrive(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID), Robot.gyro.getAngle());
-		
-	// 	myDrive.mecanumDrive_Cartesian(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID), Robot.gyro.getAngle());
-		
+
+		 if  (OI.mainJoy.getRawAxis(rightBumperID) > 0.3) {
+			
+			// myDrive.mecanumDrive_Cartesian(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID), Robot.gyro.getAngle());
+			 Robot.drive.mecanumDrive(OI.mainJoy.getRawAxis(leftXAxisID), OI.mainJoy.getRawAxis(leftYAxisID), OI.mainJoy.getRawAxis(mainJoyZAxisID)); // OI.mainJoy.getRawAxis(mainJoyZAxisID));
+				
+		}
+			
+	
+		 else if  (!OI.mainJoy.getRawButton(rightTriggerAxisID)) {
+			// myDrive.mecanumDrive_Cartesian(OI.mainJoy.getRawAxis(leftXAxisID) * 0.5, OI.mainJoy.getRawAxis(leftYAxisID) * 0.5, OI.mainJoy.getRawAxis(mainJoyZAxisID) * 0.5, Robot.gyro.getAngle());
+			 Robot.drive.mecanumDrive(OI.mainJoy.getRawAxis(leftXAxisID) * 0.5, OI.mainJoy.getRawAxis(leftYAxisID) * 0.5, OI.mainJoy.getRawAxis(mainJoyZAxisID) * 0.5); // OI.mainJoy.getRawAxis(mainJoyZAxisID));
+		 }
+	
 		}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -53,10 +64,11 @@ public class MecanumDriveCommand extends Command {
 	// Called once after isFinished returns true
 	protected void end() {
 		
-		Robot.drive.mecanumDrive(0, 0, 0);
+	//	Robot.drive.mecanumDrive(0, 0, 0); TODO: this may be of use at comp
 		
-		//myDrive.mecanumDrive_Cartesian(0, 0, 0, 0);
-	}
+		myDrive.mecanumDrive_Cartesian(0, 0, 0, 0);
+		
+			}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
