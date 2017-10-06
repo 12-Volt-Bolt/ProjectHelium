@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	// public static LEDServer ledServer = new LEDServer();
 	public static DefenseWheelsSubsystem defense;
 	public static AutoChooser autoChooser;
-	//public static BNO055 gyro;
+	//public static BNO055 gyro; TODO: hello
 	public static AHRS gyro;
 	public static Encoder encLeft = new Encoder(new DigitalInput(0), new DigitalInput(1));
 	public static Encoder encRight = new Encoder(new DigitalInput(2), new DigitalInput(3));
