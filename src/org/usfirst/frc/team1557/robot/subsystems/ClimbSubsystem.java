@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1557.robot.subsystems;
 
+import org.usfirst.frc.team1557.robot.OI;
 import org.usfirst.frc.team1557.robot.Robot;
 import org.usfirst.frc.team1557.robot.RobotMap;
 import org.usfirst.frc.team1557.robot.commands.ClimbCommand;
@@ -34,13 +35,38 @@ public class ClimbSubsystem extends Subsystem {
 	 * electrical.
 	 */
 	public void climbUp() {
-		Robot.climb.climbMotor.set(1.0);
-	}
+	
+    if  (OI.coJoy.getRawButton(1))	{	
+		
+    	Robot.climb.climbMotor.set(0.2);
+
+    }
+    
+    else {
+    	
+    	Robot.climb.climbMotor.set(0.7);
+    	
+    }
+    
+    
+}
 
 	public void climbDown() {
-		Robot.climb.climbMotor.set(-1.0);
-	}
+	
+		  if  (OI.coJoy.getRawButton(1))	{	
+				
+		    	Robot.climb.climbMotor.set(-0.2);
 
+		    }
+		    
+		    else {
+		    	
+		    	Robot.climb.climbMotor.set(-0.7);
+		    	
+		    }
+		  
+	}
+		    
 	public void stopClimb() {
 		Robot.climb.climbMotor.set(0);
 	}

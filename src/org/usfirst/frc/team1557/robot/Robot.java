@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Command;
@@ -58,7 +59,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 	
-		
+	
 		 // 58-62: try to "Constructed the NavX Gyro; if the gyro is not, the 
 		 // the runtime error will be caught to allow the system to continue"
 		 try {
@@ -123,6 +124,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("Is Enabled", drive.rotationPID.isEnabled());
 		SmartDashboard.putNumber("navX", drive.getGyroAngle());
 		DecimalFormat d = new DecimalFormat("0.00");
+		SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
+		SmartDashboard.putNumber("Right Encoder", encRight.getDistance());
+
 		// The code below is supposed print information for from the gyro
 		// Though must be fixed for navX TODO
 		
@@ -152,17 +156,114 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		drive.rotationPID.setSetpoint(0);
-	//	gyro.setOffsetValues(); TODO
-		autoChooser.choose();
 		
-	      while (isOperatorControl() && isEnabled()) {
+		
+		
+		
+		encLeft.reset();
+		encRight.reset();
+		// 22.58 is one foot 
+		//
+		
+		while((-encLeft.getDistance() > -146.64 && encRight.getDistance() > -146.64) && isEnabled()) {
+			
+			DriveSubsystem.frontRight.set(-0.4);
+			DriveSubsystem.frontLeft.set(0.4);
+			DriveSubsystem.rearRight.set(-0.4);
+			DriveSubsystem.rearLeft.set(0.4);
+					}
+		
+	
+		DriveSubsystem.rotationPID.enable();
+		  DriveSubsystem.rotationPID.setOutputRange(-0.2, 0.2);
+		 DriveSubsystem.rotationPID.setSetpoint(-45);
+		
+	 
+		 while(Math.abs(DriveSubsystem.rotationPID.getError()) > 2 && isEnabled()) {
+			  
+			 double  r = DriveSubsystem.rotationPID.get(); 
+
+				DriveSubsystem.frontRight.set(r);
+				DriveSubsystem.frontLeft.set(r);
+				DriveSubsystem.rearRight.set(r);
+				DriveSubsystem.rearLeft.set(r);
+		 }
+		 
+		
+		 encLeft.reset();
+		encRight.reset();
+		
+while((-encLeft.getDistance() > -100.8   && encRight.getDistance() > -100.8) && isEnabled()) {
+			
+			    
+			
+			DriveSubsystem.frontRight.set(-0.4);
+			DriveSubsystem.frontLeft.set(0.4);
+			DriveSubsystem.rearRight.set(-0.4);
+			DriveSubsystem.rearLeft.set(0.4);
+		//	Thread.yield();
+			
+			
+			
+				}
+		
+
+
+
+
+		
+		
+		
+		
+		
+
+		
+		
+	/*	while(encLeft.getDistance() > -225.8 && encRight.getDistance() > -225.8) {
+			
+			
+			DriveSubsystem.frontRight.set(-0.2);
+			DriveSubsystem.frontLeft.set(0.2);
+			DriveSubsystem.rearRight.set(-0.2);
+			DriveSubsystem.rearLeft.set(0.2);
+		//	DriveSubsystem.rearRight.set(-0.2);
+			//DriveSubsystem.rearLeft.set(0.2);
+			Thread.yield();
+		}
+		
+		
+		
+		
+		
+		
+		/*while (encLeft.getRaw() < -3600 && encRight.getRaw() < -3600) {
+			
+			DriveSubsystem.frontRight.set(-0.2);
+			DriveSubsystem.frontLeft.set(0.2);
+			
+		}
+		
+		*/
+		
+		DriveSubsystem.frontRight.set(0);
+		DriveSubsystem.frontLeft.set(0);
+		DriveSubsystem.rearRight.set(0);
+		DriveSubsystem.rearLeft.set(0);
+		
+		
+		
+	//	drive.rotationPID.setSetpoint(0);
+	//	gyro.setOffsetValues(); TODO
+	//	autoChooser.choose(); TODO
+	  	
+	 //     while (isOperatorControl() && isEnabled()) {
 	         
-	    	  if ( OI.mainJoy.getRawButton(0)) {
+	    /*	  if ( OI.mainJoy.getRawButton(0)) {
 	            gyro.reset();
-	    	  }
-	    	  
-	      }
+ 	            gyro.zeroYaw();
+	    	  }    */
+ 	    	  
+	//      }
 
 	}
 
@@ -171,7 +272,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+		//Scheduler.getInstance().run();
 	}
 
 	@Override
