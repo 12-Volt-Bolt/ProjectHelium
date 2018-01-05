@@ -277,8 +277,8 @@ while((-encLeft.getDistance() > -100.8   && encRight.getDistance() > -100.8) && 
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
+		// This makes sure that the autonomous stops when
+		// teleop starts. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		// running = true;
